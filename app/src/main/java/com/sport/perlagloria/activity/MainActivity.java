@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class SplashScreenActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     private static final String LOADING_CUSTOMERS_LIST_TAG = "group_list_loading";
     private ArrayList<Customer> customerArrayList;
 
@@ -27,9 +27,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splashscreen);
         customerArrayList = new ArrayList<>();
         loadCustomersInfo();
+        System.out.println();
     }
 
-    private void loadCustomersInfo(){
+    private void loadCustomersInfo() {
         String loadCustomersUrl = getString(R.string.server_host) + "/customer/getcustomers";
 
         JsonArrayRequest customersJsonRequest = new JsonArrayRequest(loadCustomersUrl,
@@ -55,7 +56,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         AppController.getInstance().addToRequestQueue(customersJsonRequest, LOADING_CUSTOMERS_LIST_TAG);
     }
 
-    private void parseCustomersJson(JSONArray response){
+    private void parseCustomersJson(JSONArray response) {
         for (int i = 0; i < response.length(); i++) {
             try {
                 JSONObject obj = response.getJSONObject(i);
