@@ -6,9 +6,6 @@ public class Customer {
     private String createdDate;
     private boolean isActive;
 
-    public Customer() {
-    }
-
     public Customer(int id, String name, String createdDate, boolean isActive) {
         this.id = id;
         this.name = name;
