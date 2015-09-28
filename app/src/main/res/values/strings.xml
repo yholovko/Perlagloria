@@ -6,14 +6,16 @@
 
     <string name="server_host">http://perlagloria.com</string>
 
-    <string name="no_connection_snackbar">Sin conexión</string>
-    <!-- No connection -->
-    <string name="no_connection_snackbar_action">CERCA</string>
-    <!-- CLOSE -->
+    <!-- Check your Internet connection -->
+    <string name="check_connection_dialog">Comprueba tu conexión a Internet</string>
 
-    <string name="server_error_snackbar">Error del Servidor</string>
-    <!-- Server error -->
-    <string name="server_error_snackbar_action">CERCA</string>
     <!-- CLOSE -->
+    <string name="check_connection_dialog_close">CERCA</string>
+
+    <!-- CHOOSE YOUR TEAM -->
+    <string name="toolbar_choose_team_title">ELEGÍ TU EQUIPO</string>
+
+    <!-- Championship -->
+    <string name="Championship">Campeonato</string>
 
 </resources>
