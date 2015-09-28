@@ -5,4 +5,15 @@
     <string name="action_settings">Settings</string>
 
     <string name="server_host">http://perlagloria.com</string>
+
+    <string name="no_connection_snackbar">Sin conexión</string>
+    <!-- No connection -->
+    <string name="no_connection_snackbar_action">CERCA</string>
+    <!-- CLOSE -->
+
+    <string name="server_error_snackbar">Error del Servidor</string>
+    <!-- Server error -->
+    <string name="server_error_snackbar_action">CERCA</string>
+    <!-- CLOSE -->
+
 </resources>
