@@ -14,10 +14,11 @@ import android.widget.RelativeLayout;
 import com.sport.perlagloria.R;
 import com.sport.perlagloria.model.Customer;
 import com.sport.perlagloria.model.Division;
+import com.sport.perlagloria.model.Team;
 import com.sport.perlagloria.model.Tournament;
 
 public class ChooseTeamActivity extends AppCompatActivity implements SelectChampionshipFragment.OnChampionshipPassListener, SelectTournamentFragment.OnTournamentPassListener,
-        SelectDivisionFragment.OnDivisionPassListener {
+        SelectDivisionFragment.OnDivisionPassListener, SelectTeamFragment.OnTeamPassListener {
     public static final int SELECT_CHAMPIONSHIP = 1;
     public static final int SELECT_TOURNAMENT = 2;
     public static final int SELECT_DIVISION = 3;
@@ -30,6 +31,7 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
     private Customer selectedChampionship;
     private Tournament selectedTournament;
     private Division selectedDivision;
+    private Team selectedTeam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,12 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
                         .commit();
                 break;
             case SELECT_TEAM:
+                targetFragment = SelectTeamFragment.newInstance(selectedChampionship.getName(), selectedTournament.getName(), selectedDivision.getName(), selectedDivision.getId());
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, targetFragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack(null)
+                        .commit();
                 break;
         }
     }
@@ -92,6 +100,8 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
         if (currentState == SELECT_TOURNAMENT && selectedTournament == null)
             return false;
         if (currentState == SELECT_DIVISION && selectedDivision == null)
+            return false;
+        if (currentState == SELECT_TEAM && selectedTeam == null)
             return false;
 
         return true;
@@ -123,6 +133,11 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
     @Override
     public void onDivisionPass(Division division) {
         selectedDivision = division;
+    }
+
+    @Override
+    public void onTeamPass(Team team) {
+        selectedTeam = team;
     }
 
     private class NextClickListener implements View.OnClickListener {
