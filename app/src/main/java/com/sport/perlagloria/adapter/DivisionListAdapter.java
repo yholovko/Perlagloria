@@ -9,17 +9,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sport.perlagloria.R;
-import com.sport.perlagloria.model.Customer;
+import com.sport.perlagloria.model.Division;
 
 import java.util.Collections;
 import java.util.List;
 
-public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipListAdapter.MyViewHolder> {
-    private List<Customer> data = Collections.emptyList();
+public class DivisionListAdapter extends RecyclerView.Adapter<DivisionListAdapter.MyViewHolder> {
+    private List<Division> data = Collections.emptyList();
     private int lastSelectedIndex = -1;
     private OnCheckboxCheckedListener onCheckboxCheckedListener;
 
-    public ChampionshipListAdapter(List<Customer> data, OnCheckboxCheckedListener onCheckboxCheckedListener) {
+    public DivisionListAdapter(List<Division> data, OnCheckboxCheckedListener onCheckboxCheckedListener) {
         super();
         this.data = data;
         this.onCheckboxCheckedListener = onCheckboxCheckedListener;
@@ -32,16 +32,16 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.select_championship_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.select_division_item, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        Customer current = data.get(position);
+        Division current = data.get(position);
 
-        holder.champItemValue.setText(current.getName());
-        holder.champItemCheckBox.setChecked(current.isSelected());
+        holder.divisItemValue.setText(current.getName());
+        holder.divisItemCheckBox.setChecked(current.isSelected());
 
         class ItemClickListener implements View.OnClickListener {
             @Override
@@ -51,7 +51,7 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
                     notifyItemChanged(lastSelectedIndex);
                 }
                 data.get(position).setIsSelected(true);
-                holder.champItemCheckBox.setChecked(true);
+                holder.divisItemCheckBox.setChecked(true);
                 notifyItemChanged(position);
 
                 lastSelectedIndex = position;
@@ -59,8 +59,8 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
             }
         }
 
-        holder.champItemLayout.setOnClickListener(new ItemClickListener());
-        holder.champItemCheckBox.setOnClickListener(new ItemClickListener());
+        holder.divisItemLayout.setOnClickListener(new ItemClickListener());
+        holder.divisItemCheckBox.setOnClickListener(new ItemClickListener());
 
         //holder.dividerView.setVisibility((data.size() - 1 == position) ? View.GONE : View.VISIBLE);
     }
@@ -70,30 +70,30 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
         return data.size();
     }
 
-    public Customer getItem(int position) {
+    public Division getItem(int position) {
         return data.get(position);
     }
 
-    public Customer getSelectedItem() {
+    public Division getSelectedItem() {
         return getItem(lastSelectedIndex);
     }
 
     public interface OnCheckboxCheckedListener {
-        void onCheckboxChecked(Customer customer);
+        void onCheckboxChecked(Division division);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        RelativeLayout champItemLayout;
-        TextView champItemValue;
-        CheckBox champItemCheckBox;
+        RelativeLayout divisItemLayout;
+        TextView divisItemValue;
+        CheckBox divisItemCheckBox;
         View dividerView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            champItemLayout = (RelativeLayout) itemView.findViewById(R.id.champItemLayout);
-            champItemValue = (TextView) itemView.findViewById(R.id.champItemValue);
-            champItemCheckBox = (CheckBox) itemView.findViewById(R.id.champItemCheckBox);
+            divisItemLayout = (RelativeLayout) itemView.findViewById(R.id.divisItemLayout);
+            divisItemValue = (TextView) itemView.findViewById(R.id.divisItemValue);
+            divisItemCheckBox = (CheckBox) itemView.findViewById(R.id.divisItemCheckBox);
             dividerView = itemView.findViewById(R.id.dividerView);
         }
     }

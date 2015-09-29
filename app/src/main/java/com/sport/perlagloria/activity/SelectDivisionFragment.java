@@ -18,8 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.sport.perlagloria.R;
-import com.sport.perlagloria.adapter.TournamentListAdapter;
-import com.sport.perlagloria.model.Tournament;
+import com.sport.perlagloria.adapter.DivisionListAdapter;
+import com.sport.perlagloria.model.Division;
 import com.sport.perlagloria.util.AppController;
 
 import org.json.JSONArray;
@@ -29,29 +29,32 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- *  Activities that contain this fragment must implement the
- * {@link SelectTournamentFragment.OnTournamentPassListener} interface
+ * Activities that contain this fragment must implement the
+ * {@link SelectDivisionFragment.OnDivisionPassListener} interface
  * to handle interaction events.
- * Use the {@link SelectTournamentFragment#newInstance} factory method to
+ * Use the {@link SelectDivisionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SelectTournamentFragment extends Fragment implements TournamentListAdapter.OnCheckboxCheckedListener {
-    private static final String CUSTOMER_ID = "customerId";
+public class SelectDivisionFragment extends Fragment implements DivisionListAdapter.OnCheckboxCheckedListener {
     private static final String CUSTOMER_NAME = "customerName";
-    private static final String LOADING_TOURNAMENTS_LIST_TAG = "tournaments_list_loading";
-    private int customerId;
+    private static final String TOURNAMENT_ID = "tournamentId";
+    private static final String TOURNAMENT_NAME = "tournamentName";
+    private static final String LOADING_DIVISIONS_LIST_TAG = "divisions_list_loading";
+    private int tournamentId;
+    private String tournamentName;
     private String customerName;
     private LinearLayoutManager mLayoutManager;
-    private RecyclerView tournamentListRecView;
-    private TournamentListAdapter tournamentListAdapter;
-    private ArrayList<Tournament> tournamentArrayList;
+    private RecyclerView divisionListRecView;
+    private DivisionListAdapter divisionListAdapter;
+    private ArrayList<Division> divisionArrayList;
 
     private TextView champValueTextView;
     private TextView tournValueTextView;
+    private TextView divisValueTextView;
 
-    private OnTournamentPassListener tournamentPassListener;  //pass selected tournament back to the activity
+    private OnDivisionPassListener divisionPassListener;  //pass selected division back to the activity
 
-    public SelectTournamentFragment() {
+    public SelectDivisionFragment() {
         // Required empty public constructor
     }
 
@@ -59,15 +62,17 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param customerId   selected customer id.
-     * @param customerName selected customer name.
-     * @return A new instance of fragment SelectTournamentFragment.
+     * @param customerName   selected customer name.
+     * @param tournamentId   selected tournament id.
+     * @param tournamentName selected tournament name.
+     * @return A new instance of fragment SelectDivisionFragment.
      */
-    public static SelectTournamentFragment newInstance(int customerId, String customerName) {
-        SelectTournamentFragment fragment = new SelectTournamentFragment();
+    public static SelectDivisionFragment newInstance(String customerName, int tournamentId, String tournamentName) {
+        SelectDivisionFragment fragment = new SelectDivisionFragment();
         Bundle args = new Bundle();
-        args.putInt(CUSTOMER_ID, customerId);
         args.putString(CUSTOMER_NAME, customerName);
+        args.putInt(TOURNAMENT_ID, tournamentId);
+        args.putString(TOURNAMENT_NAME, tournamentName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,30 +81,33 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            customerId = getArguments().getInt(CUSTOMER_ID);
             customerName = getArguments().getString(CUSTOMER_NAME);
+            tournamentId = getArguments().getInt(TOURNAMENT_ID);
+            tournamentName = getArguments().getString(TOURNAMENT_NAME);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_select_tournament, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_select_division, container, false);
         champValueTextView = (TextView) rootView.findViewById(R.id.champValueTextView);
         champValueTextView.setText(customerName);
         tournValueTextView = (TextView) rootView.findViewById(R.id.tournValueTextView);
+        tournValueTextView.setText(tournamentName);
+        divisValueTextView = (TextView) rootView.findViewById(R.id.divisValueTextView);
 
         ((ChooseTeamActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.toolbar_choose_team_title));
 
-        tournamentArrayList = new ArrayList<>();
+        divisionArrayList = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getActivity());
 
-        tournamentListRecView = (RecyclerView) rootView.findViewById(R.id.container_tournaments);
-        tournamentListAdapter = new TournamentListAdapter(tournamentArrayList, this);
-        tournamentListRecView.setAdapter(tournamentListAdapter);
-        tournamentListRecView.setItemAnimator(new DefaultItemAnimator());
-        tournamentListRecView.setLayoutManager(mLayoutManager);
+        divisionListRecView = (RecyclerView) rootView.findViewById(R.id.container_divisions);
+        divisionListAdapter = new DivisionListAdapter(divisionArrayList, this);
+        divisionListRecView.setAdapter(divisionListAdapter);
+        divisionListRecView.setItemAnimator(new DefaultItemAnimator());
+        divisionListRecView.setLayoutManager(mLayoutManager);
 
-        loadTournamentInfo();
+        loadDivisionInfo();
 
         return rootView;
     }
@@ -108,70 +116,70 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            tournamentPassListener = (OnTournamentPassListener) context;
+            divisionPassListener = (OnDivisionPassListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement OnTournamentPassListener");
+            throw new ClassCastException(context.toString() + " must implement OnDivisionPassListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        tournamentPassListener = null;
+        divisionPassListener = null;
     }
 
     /**
      * Is being executed after any checkbox was checked in recycleview
      */
     @Override
-    public void onCheckboxChecked(Tournament tournament) {
-        tournValueTextView.setText(tournament.getName());
+    public void onCheckboxChecked(Division division) {
+        divisValueTextView.setText(division.getName());
 
-        if (tournamentPassListener != null) {
-            tournamentPassListener.onTournamentPass(tournament);
+        if (divisionPassListener != null) {
+            divisionPassListener.onDivisionPass(division);
         }
     }
 
-    private void loadTournamentInfo() {
-        String loadTournamentUrl = getString(R.string.server_host) + "/tournament/gettournaments?customerId=" + customerId;
+    private void loadDivisionInfo() {
+        String loadDivisionUrl = getString(R.string.server_host) + "/division/getdivisions?tournamentId=" + tournamentId;
 
-        JsonArrayRequest tournamentsJsonRequest = new JsonArrayRequest(loadTournamentUrl,
+        JsonArrayRequest divisionsJsonRequest = new JsonArrayRequest(loadDivisionUrl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        VolleyLog.d(LOADING_TOURNAMENTS_LIST_TAG, response.toString());
+                        VolleyLog.d(LOADING_DIVISIONS_LIST_TAG, response.toString());
 
-                        if (!parseTournamentsJson(response)) { //case of response parse error
+                        if (!parseDivisionsJson(response)) { //case of response parse error
                             showErrorAlertDialog();
                         } else {
-                            tournamentListAdapter.notifyDataSetChanged();
+                            divisionListAdapter.notifyDataSetChanged();
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        VolleyLog.d(LOADING_TOURNAMENTS_LIST_TAG, "Error: " + error.getMessage());
+                        VolleyLog.d(LOADING_DIVISIONS_LIST_TAG, "Error: " + error.getMessage());
                         showErrorAlertDialog();
                     }
                 }
         );
 
-        AppController.getInstance().addToRequestQueue(tournamentsJsonRequest, LOADING_TOURNAMENTS_LIST_TAG); // Adding request to request queue
+        AppController.getInstance().addToRequestQueue(divisionsJsonRequest, LOADING_DIVISIONS_LIST_TAG); // Adding request to request queue
     }
 
-    private boolean parseTournamentsJson(JSONArray response) {
+    private boolean parseDivisionsJson(JSONArray response) {
         for (int i = 0; i < response.length(); i++) {
             try {
                 JSONObject obj = response.getJSONObject(i);
 
-                Tournament tournament = new Tournament(obj.getInt("id"),
+                Division division = new Division(obj.getInt("id"),
                         obj.getString("name"),
                         obj.getString("createdDate"),
                         obj.getBoolean("isActive"),
                         false);
 
-                tournamentArrayList.add(tournament);
+                divisionArrayList.add(division);
             } catch (JSONException e) {
                 e.printStackTrace();
                 return false;
@@ -195,9 +203,9 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
     }
 
     /**
-     * Pass data back to the activity (selected tournament)
+     * Pass data back to the activity (selected division)
      */
-    public interface OnTournamentPassListener {
-        void onTournamentPass(Tournament tournament);
+    public interface OnDivisionPassListener {
+        void onDivisionPass(Division division);
     }
 }
