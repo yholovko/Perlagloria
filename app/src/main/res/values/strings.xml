@@ -21,4 +21,7 @@
     <!-- Tournament -->
     <string name="tournament">Torneo</string>
 
+    <!-- Division -->
+    <string name="division">División</string>
+
 </resources>

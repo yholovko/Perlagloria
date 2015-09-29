@@ -13,7 +13,7 @@ import com.sport.perlagloria.R;
 import com.sport.perlagloria.model.Customer;
 import com.sport.perlagloria.model.Tournament;
 
-public class ChooseTeamActivity extends AppCompatActivity implements SelectChampionshipFragment.OnChampionshipPassListener {
+public class ChooseTeamActivity extends AppCompatActivity implements SelectChampionshipFragment.OnChampionshipPassListener, SelectTournamentFragment.OnTournamentPassListener {
     public static final int SELECT_CHAMPIONSHIP = 1;
     public static final int SELECT_TOURNAMENT = 2;
     public static final int SELECT_DIVISION = 3;
@@ -57,7 +57,6 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, targetFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .addToBackStack(null)
                         .commit();
                 break;
             case SELECT_TOURNAMENT:
@@ -65,7 +64,6 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, targetFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .addToBackStack(null)
                         .commit();
                 break;
             case SELECT_DIVISION:
@@ -97,5 +95,10 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
     @Override
     public void onChampionshipPass(Customer customer) {
         selectedChampionship = customer;
+    }
+
+    @Override
+    public void onTournamentPass(Tournament tournament) {
+        selectedTournament = tournament;
     }
 }
