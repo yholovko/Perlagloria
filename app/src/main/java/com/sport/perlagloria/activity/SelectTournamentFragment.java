@@ -46,6 +46,8 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
     private TextView champValueTextView;
     private TextView tournValueTextView;
 
+    private OnTournamentPassListener tournamentPassListener;  //pass selected tournament back to the activity
+
     public SelectTournamentFragment() {
         // Required empty public constructor
     }
@@ -102,11 +104,17 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            tournamentPassListener = (OnTournamentPassListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnTournamentPassListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        tournamentPassListener = null;
     }
 
     /**
@@ -115,6 +123,10 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
     @Override
     public void onCheckboxChecked(Tournament tournament) {
         tournValueTextView.setText(tournament.getName());
+
+        if (tournamentPassListener != null) {
+            tournamentPassListener.onTournamentPass(tournament);
+        }
     }
 
     private void loadTournamentInfo() {
@@ -177,5 +189,12 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
             }
         });
         builder.show();
+    }
+
+    /**
+     * Pass data back to the activity (selected tournament)
+     */
+    public interface OnTournamentPassListener {
+        void onTournamentPass(Tournament tournament);
     }
 }
