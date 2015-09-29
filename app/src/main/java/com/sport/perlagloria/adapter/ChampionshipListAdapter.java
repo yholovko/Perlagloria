@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sport.perlagloria.R;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipListAdapter.MyViewHolder> {
     private List<Customer> data = Collections.emptyList();
-    private int lastSelectedIndex;
+    private int lastSelectedIndex = -1;
     private OnCheckboxCheckedListener onCheckboxCheckedListener;
 
     public ChampionshipListAdapter(List<Customer> data, OnCheckboxCheckedListener onCheckboxCheckedListener) {
@@ -36,31 +37,33 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Customer current = data.get(position);
 
         holder.champItemValue.setText(current.getName());
         holder.champItemCheckBox.setChecked(current.isSelected());
-        holder.champItemCheckBox.setOnClickListener(new View.OnClickListener() {
+
+        class ItemClickListener implements View.OnClickListener {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < data.size(); i++) {
-                    if (i != position) {            //&& data.get(i).isSelected()
-                        data.get(i).setIsSelected(false);
-                    } else {
-                        data.get(position).setIsSelected(true); //1 item always selected
-                    }
-                    notifyItemChanged(i);
+                if (lastSelectedIndex != -1) {    //unselect last selected item
+                    data.get(lastSelectedIndex).setIsSelected(false);
+                    notifyItemChanged(lastSelectedIndex);
                 }
+                data.get(position).setIsSelected(true);
+                holder.champItemCheckBox.setChecked(true);
+                notifyItemChanged(position);
 
                 lastSelectedIndex = position;
                 onCheckboxCheckedListener.onCheckboxChecked(getItem(position));  //send message back to fragment (to change selected championship title)
             }
-        });
+        }
+
+        holder.champItemLayout.setOnClickListener(new ItemClickListener());
+        holder.champItemCheckBox.setOnClickListener(new ItemClickListener());
 
         holder.dividerView.setVisibility((data.size() - 1 == position) ? View.GONE : View.VISIBLE);
     }
-
 
     @Override
     public int getItemCount() {
@@ -80,6 +83,7 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
+        RelativeLayout champItemLayout;
         TextView champItemValue;
         CheckBox champItemCheckBox;
         View dividerView;
@@ -87,6 +91,7 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
         public MyViewHolder(View itemView) {
             super(itemView);
 
+            champItemLayout = (RelativeLayout) itemView.findViewById(R.id.champItemLayout);
             champItemValue = (TextView) itemView.findViewById(R.id.champItemValue);
             champItemCheckBox = (CheckBox) itemView.findViewById(R.id.champItemCheckBox);
             dividerView = itemView.findViewById(R.id.dividerView);
