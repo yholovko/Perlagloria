@@ -44,17 +44,13 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
         holder.champItemCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data.get(position).isSelected()) {
-                    data.get(position).setIsSelected(false);
-                } else {
-                    data.get(position).setIsSelected(true);
-
-                    for (int i = 0; i < data.size(); i++) {
-                        if (i != position) {            //&& data.get(i).isSelected()
-                            data.get(i).setIsSelected(false);
-                            notifyItemChanged(i);
-                        }
+                for (int i = 0; i < data.size(); i++) {
+                    if (i != position) {            //&& data.get(i).isSelected()
+                        data.get(i).setIsSelected(false);
+                    } else {
+                        data.get(position).setIsSelected(true); //1 item always selected
                     }
+                    notifyItemChanged(i);
                 }
 
                 lastSelectedIndex = position;
