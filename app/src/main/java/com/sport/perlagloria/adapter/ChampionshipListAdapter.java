@@ -80,8 +80,6 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        private static final String TAG = MyViewHolder.class.getSimpleName();
-
         TextView champItemValue;
         CheckBox champItemCheckBox;
         View dividerView;

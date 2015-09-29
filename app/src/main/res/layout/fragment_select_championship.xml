@@ -13,7 +13,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="@string/Championship"
+        android:text="@string/championship"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold" />

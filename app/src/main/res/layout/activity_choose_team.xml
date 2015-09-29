@@ -27,7 +27,7 @@
         android:layout_height="@dimen/custom_toolbar_height">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/triangleImageView"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentEnd="true"
