@@ -30,7 +30,7 @@
         android:gravity="center"
         android:maxLength="20"
         android:text=""
-        android:textColor="#0077ff"
+        android:textColor="@color/colorSelectedItem"
         android:textSize="20sp" />
 
     <android.support.v7.widget.RecyclerView
