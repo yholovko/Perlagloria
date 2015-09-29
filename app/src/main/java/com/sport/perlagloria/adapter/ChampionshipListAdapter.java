@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.sport.perlagloria.R;
@@ -23,10 +22,6 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
         super();
         this.data = data;
         this.onCheckboxCheckedListener = onCheckboxCheckedListener;
-
-//        for (int i = 0; i < data.size(); i++) {
-//            isChecked.add(i, false);
-//        }
     }
 
     public void delete(int position) {
@@ -46,14 +41,14 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
 
         holder.champItemValue.setText(current.getName());
         holder.champItemCheckBox.setChecked(current.isSelected());
-        holder.champItemCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.champItemCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                data.get(position).setIsSelected(isChecked);
-                lastSelectedIndex = position;
-                onCheckboxCheckedListener.onCheckboxChecked();  //send message back to fragment (to change selected championship title)
+            public void onClick(View v) {
+                if (data.get(position).isSelected()) {
+                    data.get(position).setIsSelected(false);
+                } else {
+                    data.get(position).setIsSelected(true);
 
-                if (isChecked) { //uncheck all other items
                     for (int i = 0; i < data.size(); i++) {
                         if (i != position) {            //&& data.get(i).isSelected()
                             data.get(i).setIsSelected(false);
@@ -61,6 +56,9 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
                         }
                     }
                 }
+
+                lastSelectedIndex = position;
+                onCheckboxCheckedListener.onCheckboxChecked(getItem(position));  //send message back to fragment (to change selected championship title)
             }
         });
 
@@ -82,7 +80,7 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
     }
 
     public interface OnCheckboxCheckedListener {
-        void onCheckboxChecked();
+        void onCheckboxChecked(Customer customer);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

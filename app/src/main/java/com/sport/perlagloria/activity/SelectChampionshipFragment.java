@@ -83,9 +83,9 @@ public class SelectChampionshipFragment extends Fragment implements Championship
      * Is being executed after any checkbox was checked in recycleview
      */
     @Override
-    public void onCheckboxChecked() {
-        //Log.d("TAG", "checked :)");
-        champValueTextView.setText(championshipListAdapter.getSelectedItem().getName());
+    public void onCheckboxChecked(Customer customer) {
+        //Log.d("TAG", "checked!");
+        champValueTextView.setText(customer.getName());
     }
 
     private void loadChampionshipInfo() {
