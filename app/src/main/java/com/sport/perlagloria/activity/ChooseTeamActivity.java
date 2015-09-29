@@ -7,7 +7,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.sport.perlagloria.R;
 import com.sport.perlagloria.model.Customer;
@@ -23,6 +25,7 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
 
     private int currentState = SELECT_CHAMPIONSHIP;
     private ImageView triangleImageView;
+    private RelativeLayout bottomLayout; //layout with "next" triangle button
 
     private Customer selectedChampionship;
     private Tournament selectedTournament;
@@ -36,16 +39,10 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
         Toolbar mainToolbar = (Toolbar) findViewById(R.id.mainToolbar);
         setSupportActionBar(mainToolbar);
 
+        bottomLayout = (RelativeLayout) findViewById(R.id.bottomLayout);
+        bottomLayout.setOnClickListener(new NextClickListener());
         triangleImageView = (ImageView) findViewById(R.id.triangleImageView);
-        triangleImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (currentState < SELECT_TEAM && checkSelection()) {
-                    currentState++;
-                    loadFragment();
-                }
-            }
-        });
+        triangleImageView.setOnClickListener(new NextClickListener());
 
         loadFragment();
     }
@@ -60,6 +57,7 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, targetFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                //.addToBackStack(null)
                         .commit();
                 break;
             case SELECT_TOURNAMENT:
@@ -67,6 +65,7 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, targetFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack(null)
                         .commit();
                 break;
             case SELECT_DIVISION:
@@ -74,6 +73,7 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, targetFragment)
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack(null)
                         .commit();
                 break;
             case SELECT_TEAM:
@@ -103,6 +103,14 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (currentState > SELECT_CHAMPIONSHIP) {
+            currentState--;
+        }
+    }
+
+    @Override
     public void onChampionshipPass(Customer customer) {
         selectedChampionship = customer;
     }
@@ -115,5 +123,16 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
     @Override
     public void onDivisionPass(Division division) {
         selectedDivision = division;
+    }
+
+    private class NextClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            if (currentState < SELECT_TEAM && checkSelection()) {
+                currentState++;
+                loadFragment();
+                triangleImageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_triangle));
+            }
+        }
     }
 }
