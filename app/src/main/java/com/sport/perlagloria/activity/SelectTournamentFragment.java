@@ -29,6 +29,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
+ *  Activities that contain this fragment must implement the
+ * {@link SelectTournamentFragment.OnTournamentPassListener} interface
+ * to handle interaction events.
  * Use the {@link SelectTournamentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */

@@ -62,7 +62,7 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
         holder.champItemLayout.setOnClickListener(new ItemClickListener());
         holder.champItemCheckBox.setOnClickListener(new ItemClickListener());
 
-        holder.dividerView.setVisibility((data.size() - 1 == position) ? View.GONE : View.VISIBLE);
+        //holder.dividerView.setVisibility((data.size() - 1 == position) ? View.GONE : View.VISIBLE);
     }
 
     @Override

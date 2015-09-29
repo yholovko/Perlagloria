@@ -62,7 +62,7 @@ public class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAd
         holder.tournItemLayout.setOnClickListener(new ItemClickListener());
         holder.tournItemCheckBox.setOnClickListener(new ItemClickListener());
 
-        holder.dividerView.setVisibility((data.size() - 1 == position) ? View.GONE : View.VISIBLE);
+        //holder.dividerView.setVisibility((data.size() - 1 == position) ? View.GONE : View.VISIBLE);
     }
 
 
