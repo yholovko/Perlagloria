@@ -8,17 +8,17 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.sport.perlagloria.R;
-import com.sport.perlagloria.model.Customer;
+import com.sport.perlagloria.model.Tournament;
 
 import java.util.Collections;
 import java.util.List;
 
-public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipListAdapter.MyViewHolder> {
-    private List<Customer> data = Collections.emptyList();
+public class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAdapter.MyViewHolder> {
+    private List<Tournament> data = Collections.emptyList();
     private int lastSelectedIndex;
     private OnCheckboxCheckedListener onCheckboxCheckedListener;
 
-    public ChampionshipListAdapter(List<Customer> data, OnCheckboxCheckedListener onCheckboxCheckedListener) {
+    public TournamentListAdapter(List<Tournament> data, OnCheckboxCheckedListener onCheckboxCheckedListener) {
         super();
         this.data = data;
         this.onCheckboxCheckedListener = onCheckboxCheckedListener;
@@ -31,17 +31,17 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.select_championship_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.select_tournament_item, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        Customer current = data.get(position);
+        Tournament current = data.get(position);
 
-        holder.champItemValue.setText(current.getName());
-        holder.champItemCheckBox.setChecked(current.isSelected());
-        holder.champItemCheckBox.setOnClickListener(new View.OnClickListener() {
+        holder.tournItemValue.setText(current.getName());
+        holder.tournItemCheckBox.setChecked(current.isSelected());
+        holder.tournItemCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for (int i = 0; i < data.size(); i++) {
@@ -67,28 +67,28 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
         return data.size();
     }
 
-    public Customer getItem(int position) {
+    public Tournament getItem(int position) {
         return data.get(position);
     }
 
-    public Customer getSelectedItem() {
+    public Tournament getSelectedItem() {
         return getItem(lastSelectedIndex);
     }
 
     public interface OnCheckboxCheckedListener {
-        void onCheckboxChecked(Customer customer);
+        void onCheckboxChecked(Tournament tournament);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView champItemValue;
-        CheckBox champItemCheckBox;
+        TextView tournItemValue;
+        CheckBox tournItemCheckBox;
         View dividerView;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            champItemValue = (TextView) itemView.findViewById(R.id.champItemValue);
-            champItemCheckBox = (CheckBox) itemView.findViewById(R.id.champItemCheckBox);
+            tournItemValue = (TextView) itemView.findViewById(R.id.tournItemValue);
+            tournItemCheckBox = (CheckBox) itemView.findViewById(R.id.tournItemCheckBox);
             dividerView = itemView.findViewById(R.id.dividerView);
         }
     }

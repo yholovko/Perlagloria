@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class SelectChampionshipFragment extends Fragment implements ChampionshipListAdapter.OnCheckboxCheckedListener {
 
-    private static final String LOADING_CUSTOMERS_LIST_TAG = "group_list_loading";
+    private static final String LOADING_CUSTOMERS_LIST_TAG = "customers_list_loading";
 
     private LinearLayoutManager mLayoutManager;
     private RecyclerView championshipListRecView;
@@ -38,6 +38,8 @@ public class SelectChampionshipFragment extends Fragment implements Championship
     private ArrayList<Customer> championshipArrayList;
 
     private TextView champValueTextView;
+
+    private OnChampionshipPassListener championshipPassListener;  //pass selected championship back to the activity
 
     public SelectChampionshipFragment() {
         // Required empty public constructor
@@ -72,11 +74,17 @@ public class SelectChampionshipFragment extends Fragment implements Championship
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        try {
+            championshipPassListener = (OnChampionshipPassListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnChampionshipPassListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        championshipPassListener = null;
     }
 
     /**
@@ -86,6 +94,10 @@ public class SelectChampionshipFragment extends Fragment implements Championship
     public void onCheckboxChecked(Customer customer) {
         //Log.d("TAG", "checked!");
         champValueTextView.setText(customer.getName());
+
+        if (championshipPassListener != null) {
+            championshipPassListener.onChampionshipPass(customer);
+        }
     }
 
     private void loadChampionshipInfo() {
@@ -150,4 +162,10 @@ public class SelectChampionshipFragment extends Fragment implements Championship
         builder.show();
     }
 
+    /**
+     * Pass data back to the activity (selected championship)
+     */
+    public interface OnChampionshipPassListener {
+        void onChampionshipPass(Customer customer);
+    }
 }

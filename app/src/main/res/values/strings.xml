@@ -16,6 +16,9 @@
     <string name="toolbar_choose_team_title">ELEGÍ TU EQUIPO</string>
 
     <!-- Championship -->
-    <string name="Championship">Campeonato</string>
+    <string name="championship">Campeonato</string>
+
+    <!-- Tournament -->
+    <string name="tournament">Torneo</string>
 
 </resources>
