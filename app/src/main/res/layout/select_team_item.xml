@@ -9,12 +9,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/teamItemCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/teamItemCheckBox"
+        android:layout_marginEnd="5dp"
         android:layout_marginLeft="25dp"
+        android:layout_marginRight="5dp"
         android:layout_marginStart="25dp"
-        android:gravity="center_vertical|center_horizontal"
-        android:maxLength="20"
-        android:text=""
+        android:layout_toLeftOf="@+id/teamItemCheckBox"
+        android:layout_toStartOf="@+id/teamItemCheckBox"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:text="FKKKKKKKKKKKKKKKKKKKKKaaaaaaaasd"
         android:textSize="17sp" />
 
     <CheckBox
