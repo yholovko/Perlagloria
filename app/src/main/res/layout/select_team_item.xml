@@ -20,7 +20,7 @@
         android:layout_toStartOf="@+id/teamItemCheckBox"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:text="FKKKKKKKKKKKKKKKKKKKKKaaaaaaaasd"
+        android:text=""
         android:textSize="17sp" />
 
     <CheckBox
