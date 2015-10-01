@@ -106,7 +106,7 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
         divisValueTextView = (TextView) rootView.findViewById(R.id.divisValueTextView);
         divisValueTextView.setText(divisionName);
 
-        ((ChooseTeamActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.toolbar_choose_team_title));
+        ((ChooseTeamActivity) getActivity()).setToolbarTitle(getString(R.string.toolbar_choose_team_title));
 
         teamArrayList = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getActivity());

@@ -58,7 +58,7 @@ public class SelectChampionshipFragment extends Fragment implements Championship
         View rootView = inflater.inflate(R.layout.fragment_select_championship, container, false);
         champValueTextView = (TextView) rootView.findViewById(R.id.champValueTextView);
 
-        ((ChooseTeamActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.toolbar_choose_team_title));
+        ((ChooseTeamActivity) getActivity()).setToolbarTitle(getString(R.string.toolbar_choose_team_title));
 
         championshipArrayList = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getActivity());

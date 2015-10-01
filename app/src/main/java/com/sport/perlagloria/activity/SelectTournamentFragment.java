@@ -91,7 +91,7 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
         champValueTextView.setText(customerName);
         tournValueTextView = (TextView) rootView.findViewById(R.id.tournValueTextView);
 
-        ((ChooseTeamActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.toolbar_choose_team_title));
+        ((ChooseTeamActivity) getActivity()).setToolbarTitle(getString(R.string.toolbar_choose_team_title));
 
         tournamentArrayList = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getActivity());
