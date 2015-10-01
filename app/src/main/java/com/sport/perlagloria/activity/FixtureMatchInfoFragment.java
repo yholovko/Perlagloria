@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -110,7 +111,7 @@ public class FixtureMatchInfoFragment extends Fragment {
                         hidePDialog();
 
                         if (!parseFixtudeMatchInfoJson(response)) { //case of response parse error
-                            showErrorAlertDialog();
+                            Toast.makeText(getActivity(), R.string.no_info_from_server, Toast.LENGTH_LONG).show();
                         } else {
                             try {
                                 setData();
@@ -126,7 +127,13 @@ public class FixtureMatchInfoFragment extends Fragment {
                         VolleyLog.d(LOADING_FIXTURE_MATCH_TAG, "Error: " + error.getMessage());
                         hidePDialog();
 
-                        showErrorAlertDialog();
+                        if (error.getMessage() == null) {                                            //com.android.volley.TimeoutError
+                            showErrorAlertDialog();
+                        } else if (error.getMessage().contains("java.net.UnknownHostException") && error.networkResponse == null) { //com.android.volley.NoConnectionError
+                            showErrorAlertDialog();
+                        } else {                                                                     //response error, code = error.networkResponse.statusCode
+                            Toast.makeText(getActivity(), R.string.server_response_error, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
         );
@@ -261,6 +268,5 @@ public class FixtureMatchInfoFragment extends Fragment {
         builder.setCancelable(false);
         builder.show();
     }
-
 
 }

@@ -24,6 +24,12 @@
     <!-- Loading data -->
     <string name="loading_data_progress_dialog">Cargando datos</string>
 
+    <!-- No information from the server -->
+    <string name="no_info_from_server">No hay información desde el servidor</string>
+
+    <!-- Server response error -->
+    <string name="server_response_error">Error de respuesta del servidor</string>
+
     <!-- CHOOSE YOUR TEAM -->
     <string name="toolbar_choose_team_title">ELEGÍ TU EQUIPO</string>
 

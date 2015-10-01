@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -176,8 +177,8 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
                         VolleyLog.d(LOADING_TEAMS_LIST_TAG, response.toString());
                         hidePDialog();
 
-                        if (!parseTeamsJson(response)) { //case of response parse error
-                            showErrorAlertDialog();
+                        if (!parseTeamsJson(response)) {                                            //case of response parse error
+                            Toast.makeText(getActivity(), R.string.no_info_from_server, Toast.LENGTH_LONG).show();
                         } else {
                             teamListAdapter.notifyDataSetChanged();
                         }
@@ -189,7 +190,13 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
                         VolleyLog.d(LOADING_TEAMS_LIST_TAG, "Error: " + error.getMessage());
                         hidePDialog();
 
-                        showErrorAlertDialog();
+                        if (error.getMessage() == null) {                                            //com.android.volley.TimeoutError
+                            showErrorAlertDialog();
+                        } else if (error.getMessage().contains("java.net.UnknownHostException") && error.networkResponse == null) { //com.android.volley.NoConnectionError
+                            showErrorAlertDialog();
+                        } else {                                                                     //response error, code = error.networkResponse.statusCode
+                            Toast.makeText(getActivity(), R.string.server_response_error, Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
         );

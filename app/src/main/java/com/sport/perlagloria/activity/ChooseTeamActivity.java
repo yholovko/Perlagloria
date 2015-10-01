@@ -1,24 +1,38 @@
 package com.sport.perlagloria.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.sport.perlagloria.R;
 import com.sport.perlagloria.model.Customer;
 import com.sport.perlagloria.model.Division;
 import com.sport.perlagloria.model.Team;
 import com.sport.perlagloria.model.Tournament;
+import com.sport.perlagloria.util.AppController;
 import com.sport.perlagloria.util.SharedPreferenceKey;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ChooseTeamActivity extends AppCompatActivity implements SelectChampionshipFragment.OnChampionshipPassListener, SelectTournamentFragment.OnTournamentPassListener,
         SelectDivisionFragment.OnDivisionPassListener, SelectTeamFragment.OnTeamPassListener {
@@ -26,10 +40,11 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
     public static final int SELECT_TOURNAMENT = 2;
     public static final int SELECT_DIVISION = 3;
     public static final int SELECT_TEAM = 4;
-
+    private static final String LOADING_TEST_TAG = "loading_test";
     private int currentState = SELECT_CHAMPIONSHIP;
     private ImageView triangleImageView;
     private RelativeLayout bottomLayout; //layout with "next" triangle button
+    private boolean isCheckingProcess;
 
     private Customer selectedChampionship;
     private Tournament selectedTournament;
@@ -48,6 +63,9 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
         bottomLayout.setOnClickListener(new NextClickListener());
         triangleImageView = (ImageView) findViewById(R.id.triangleImageView);
         triangleImageView.setOnClickListener(new NextClickListener());
+
+        isCheckingProcess = false;
+        //checkInfo
 
         loadFragment();
     }
@@ -110,6 +128,110 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
         return true;
     }
 
+    private void checkIsDataFromServerJArray(String url) {
+//        String loadCustomersUrl = getString(R.string.server_host) + "/customer/getcustomers";
+//        String loadTournamentUrl = getString(R.string.server_host) + "/tournament/gettournaments?customerId=" + selectedChampionship.getId();
+//        String loadDivisionUrl = getString(R.string.server_host) + "/division/getdivisions?tournamentId=" + selectedTournament.getId();
+//        String loadTeamUrl = getString(R.string.server_host) + "/team/getteams?divisionId=" + selectedDivision.getId();
+//        String loadFixtureMatchInfoUrl = getString(R.string.server_host) + "/fixturematch/getnextfixturematch?teamId=" + selectedTeam.getId();
+
+        isCheckingProcess = true;
+
+        JsonArrayRequest testJsonRequest = new JsonArrayRequest(url,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        VolleyLog.d(LOADING_TEST_TAG, response.toString());
+
+                        try {
+                            response.getJSONObject(0).getInt("id");   //json is not null
+                            loadNext();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), R.string.no_info_from_server, Toast.LENGTH_LONG).show();    //no information from the server
+                        }
+                        isCheckingProcess = false;
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.d(LOADING_TEST_TAG, "Error: " + error.getMessage());
+
+                        if (error.getMessage() == null) {                                            //com.android.volley.TimeoutError
+                            showErrorAlertDialog();
+                        } else if (error.getMessage().contains("java.net.UnknownHostException") && error.networkResponse == null) { //com.android.volley.NoConnectionError
+                            showErrorAlertDialog();
+                        } else {                                                                     //response error, code = error.networkResponse.statusCode
+                            Toast.makeText(getApplicationContext(), R.string.server_response_error, Toast.LENGTH_LONG).show();
+                        }
+                        isCheckingProcess = false;
+                    }
+                }
+        );
+
+        AppController.getInstance().addToRequestQueue(testJsonRequest, LOADING_TEST_TAG);
+    }
+
+    private void checkIsDataFromServerJObject(String url) {
+//        String loadCustomersUrl = getString(R.string.server_host) + "/customer/getcustomers";
+//        String loadTournamentUrl = getString(R.string.server_host) + "/tournament/gettournaments?customerId=" + selectedChampionship.getId();
+//        String loadDivisionUrl = getString(R.string.server_host) + "/division/getdivisions?tournamentId=" + selectedTournament.getId();
+//        String loadTeamUrl = getString(R.string.server_host) + "/team/getteams?divisionId=" + selectedDivision.getId();
+//        String loadFixtureMatchInfoUrl = getString(R.string.server_host) + "/fixturematch/getnextfixturematch?teamId=" + selectedTeam.getId();
+
+        isCheckingProcess = true;
+
+        JsonObjectRequest testJsonRequest = new JsonObjectRequest(url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        VolleyLog.d(LOADING_TEST_TAG, response.toString());
+
+                        try {
+                            response.getInt("id");   //json is not null
+                            loadNext();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), R.string.no_info_from_server, Toast.LENGTH_LONG).show();    //no information from the server
+                        }
+                        isCheckingProcess = false;
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        VolleyLog.d(LOADING_TEST_TAG, "Error: " + error.getMessage());
+
+                        if (error.getMessage() == null) {                                            //com.android.volley.TimeoutError
+                            showErrorAlertDialog();
+                        } else if (error.getMessage().contains("java.net.UnknownHostException") && error.networkResponse == null) { //com.android.volley.NoConnectionError
+                            showErrorAlertDialog();
+                        } else {                                                                     //response error, code = error.networkResponse.statusCode
+                            Toast.makeText(getApplicationContext(), R.string.server_response_error, Toast.LENGTH_LONG).show();
+                        }
+                        isCheckingProcess = false;
+                    }
+                }
+        );
+
+        AppController.getInstance().addToRequestQueue(testJsonRequest, LOADING_TEST_TAG);
+    }
+
+    private void showErrorAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        builder.setMessage(getString(R.string.check_connection_dialog));
+        builder.setNegativeButton(getString(R.string.check_connection_dialog_close), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                System.exit(0);
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -143,23 +265,44 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
         selectedTeam = team;
     }
 
+    private void loadNext() {
+        if (currentState < SELECT_TEAM && checkSelection()) {                                   //load next fragment
+            currentState++;
+            loadFragment();
+            //triangleImageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_triangle));
+        } else if (currentState == SELECT_TEAM && checkSelection()) {                           //move to the next activity
+            SharedPreferences sPref = getSharedPreferences("config", MODE_PRIVATE);             //save selected team
+            SharedPreferences.Editor ed = sPref.edit();
+            ed.putInt(SharedPreferenceKey.TEAM_ID, selectedTeam.getId());
+            ed.putString(SharedPreferenceKey.TEAM_NAME, selectedTeam.getName());
+            ed.commit();
+
+            Intent intent = new Intent(getApplicationContext(), TeamActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
     private class NextClickListener implements View.OnClickListener {
         @Override
-        public void onClick(View v) {
-            if (currentState < SELECT_TEAM && checkSelection()) {
-                currentState++;
-                loadFragment();
-                triangleImageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_triangle));
-            } else if (currentState == SELECT_TEAM && checkSelection()) {    //move to the next activity
-                SharedPreferences sPref = getSharedPreferences("config", MODE_PRIVATE);     //save selected team
-                SharedPreferences.Editor ed = sPref.edit();
-                ed.putInt(SharedPreferenceKey.TEAM_ID, selectedTeam.getId());
-                ed.putString(SharedPreferenceKey.TEAM_NAME, selectedTeam.getName());
-                ed.commit();
+        public void onClick(View v) {   //check if data is available from the server
 
-                Intent intent = new Intent(getApplicationContext(), TeamActivity.class);
-                startActivity(intent);
-                finish();
+            if (currentState < SELECT_TEAM && checkSelection() && !isCheckingProcess) { //check data for next fragment
+                if (currentState == SELECT_CHAMPIONSHIP)
+                    checkIsDataFromServerJArray(getString(R.string.server_host) + "/customer/getcustomers");
+                if (currentState == SELECT_TOURNAMENT)
+                    checkIsDataFromServerJArray(getString(R.string.server_host) + "/tournament/gettournaments?customerId=" + selectedChampionship.getId());
+                if (currentState == SELECT_DIVISION)
+                    checkIsDataFromServerJArray(getString(R.string.server_host) + "/division/getdivisions?tournamentId=" + selectedTournament.getId());
+                if (currentState == SELECT_TEAM)
+                    checkIsDataFromServerJArray(getString(R.string.server_host) + "/team/getteams?divisionId=" + selectedDivision.getId());
+
+                triangleImageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_triangle));
+            } else if (currentState == SELECT_TEAM && checkSelection() && !isCheckingProcess) { //check data for next activity
+                Log.d("TEST", getString(R.string.server_host) + "/fixturematch/getnextfixturematch?teamId=" + selectedTeam.getId());
+                checkIsDataFromServerJObject(getString(R.string.server_host) + "/fixturematch/getnextfixturematch?teamId=" + selectedTeam.getId());
+
+                triangleImageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_triangle));
             }
         }
     }
