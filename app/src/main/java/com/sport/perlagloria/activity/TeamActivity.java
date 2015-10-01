@@ -20,6 +20,8 @@ public class TeamActivity extends AppCompatActivity {
     private TextView firstTab;
     private TextView secondTab;
 
+    private boolean isFirstTabSelected;
+
     private TextView toolbarTitle;
     private Toolbar mainToolbar;
 
@@ -38,23 +40,40 @@ public class TeamActivity extends AppCompatActivity {
         firstTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isFirstTabSelected) return;
+                isFirstTabSelected = true;
+
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 MyTeamFragment targetFragment = new MyTeamFragment();
 
                 fragmentManager.beginTransaction()
                         .replace(R.id.tab_fragment_container, targetFragment)
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .setTransition(FragmentTransaction.TRANSIT_NONE)
                         .commit();
             }
         });
 
-        //mainTabLayout = (TabLayout) findViewById(R.id.main_tab_Layout);
+        secondTab = (TextView) findViewById(R.id.secondTab);
+        secondTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isFirstTabSelected) return;
+                isFirstTabSelected = false;
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                StatisticsFragment targetFragment = new StatisticsFragment();
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.tab_fragment_container, targetFragment)
+                        .setTransition(FragmentTransaction.TRANSIT_NONE)
+                        .commit();
+            }
+        });
 
         SharedPreferences sPref = getSharedPreferences("config", Context.MODE_PRIVATE);
         setToolbarTitle(sPref.getString(SharedPreferenceKey.TEAM_NAME, "Null"));
 
-
-        //pagerAdapter.
+        firstTab.performClick();
     }
 
     public void setToolbarTitle(String text) {
