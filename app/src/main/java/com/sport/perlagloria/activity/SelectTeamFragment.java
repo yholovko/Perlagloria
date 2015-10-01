@@ -184,7 +184,7 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
                         tacticObj.getString("description"));
 
 
-                Team division = new Team(obj.getInt("id"),
+                Team team = new Team(obj.getInt("id"),
                         obj.getString("name"),
                         obj.getString("createdDate"),
                         obj.getBoolean("isActive"),
@@ -202,7 +202,7 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
                         tactic,
                         false);
 
-                teamArrayList.add(division);
+                teamArrayList.add(team);
             } catch (JSONException e) {
                 e.printStackTrace();
                 return false;

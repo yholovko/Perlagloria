@@ -94,7 +94,7 @@ public class DivisionListAdapter extends RecyclerView.Adapter<DivisionListAdapte
             divisItemLayout = (RelativeLayout) itemView.findViewById(R.id.divisItemLayout);
             divisItemValue = (TextView) itemView.findViewById(R.id.divisItemValue);
             divisItemCheckBox = (CheckBox) itemView.findViewById(R.id.divisItemCheckBox);
-            dividerView = itemView.findViewById(R.id.dividerView);
+            dividerView = itemView.findViewById(R.id.horizDividerView);
         }
     }
 }
