@@ -41,6 +41,8 @@ public class MyTeamFragment extends Fragment {
         tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
+        //viewPager.setCurrentItem(0);
+
         return rootView;
     }
 
