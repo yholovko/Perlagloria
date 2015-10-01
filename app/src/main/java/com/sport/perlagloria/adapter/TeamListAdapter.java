@@ -51,7 +51,6 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.MyView
                     notifyItemChanged(lastSelectedIndex);
                 }
                 data.get(position).setIsSelected(true);
-                holder.teamItemCheckBox.setChecked(true);
                 notifyItemChanged(position);
 
                 lastSelectedIndex = position;

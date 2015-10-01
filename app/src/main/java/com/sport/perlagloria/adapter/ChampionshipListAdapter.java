@@ -51,7 +51,6 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
                     notifyItemChanged(lastSelectedIndex);
                 }
                 data.get(position).setIsSelected(true);
-                holder.champItemCheckBox.setChecked(true);
                 notifyItemChanged(position);
 
                 lastSelectedIndex = position;

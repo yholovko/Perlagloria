@@ -51,7 +51,6 @@ public class DivisionListAdapter extends RecyclerView.Adapter<DivisionListAdapte
                     notifyItemChanged(lastSelectedIndex);
                 }
                 data.get(position).setIsSelected(true);
-                holder.divisItemCheckBox.setChecked(true);
                 notifyItemChanged(position);
 
                 lastSelectedIndex = position;

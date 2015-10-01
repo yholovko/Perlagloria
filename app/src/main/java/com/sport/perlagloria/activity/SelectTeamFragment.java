@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -111,7 +110,7 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
         teamListRecView = (RecyclerView) rootView.findViewById(R.id.container_teams);
         teamListAdapter = new TeamListAdapter(teamArrayList, this);
         teamListRecView.setAdapter(teamListAdapter);
-        teamListRecView.setItemAnimator(new DefaultItemAnimator());
+        teamListRecView.setItemAnimator(null);
         teamListRecView.setLayoutManager(mLayoutManager);
 
         loadTeamInfo();

@@ -51,7 +51,6 @@ public class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAd
                     notifyItemChanged(lastSelectedIndex);
                 }
                 data.get(position).setIsSelected(true);
-                holder.tournItemCheckBox.setChecked(true);
                 notifyItemChanged(position);
 
                 lastSelectedIndex = position;

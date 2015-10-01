@@ -34,8 +34,8 @@ public class MyTeamFragment extends Fragment {
         myFragmentAdapter = new MyFragmentAdapter(getActivity().getSupportFragmentManager());
         viewPager.setAdapter(myFragmentAdapter);
         tabLayout.setTabsFromPagerAdapter(myFragmentAdapter);
-        tabLayout.setTabTextColors(getResources().getColor(R.color.tabNormal, null), getResources().getColor(R.color.tabSelected, null));
-        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.tabSelected, null));
+        tabLayout.setTabTextColors(getResources().getColor(R.color.tabNormal), getResources().getColor(R.color.tabSelected));
+        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.tabSelected));
         tabLayout.setSelectedTabIndicatorHeight(1);
 
         tabLayout.setupWithViewPager(viewPager);
