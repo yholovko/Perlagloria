@@ -94,7 +94,7 @@ public class ChampionshipListAdapter extends RecyclerView.Adapter<ChampionshipLi
             champItemLayout = (RelativeLayout) itemView.findViewById(R.id.champItemLayout);
             champItemValue = (TextView) itemView.findViewById(R.id.champItemValue);
             champItemCheckBox = (CheckBox) itemView.findViewById(R.id.champItemCheckBox);
-            dividerView = itemView.findViewById(R.id.dividerView);
+            dividerView = itemView.findViewById(R.id.horizDividerView);
         }
     }
 }

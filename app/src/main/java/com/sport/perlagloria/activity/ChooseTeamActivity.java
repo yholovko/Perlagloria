@@ -1,5 +1,7 @@
 package com.sport.perlagloria.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +18,7 @@ import com.sport.perlagloria.model.Customer;
 import com.sport.perlagloria.model.Division;
 import com.sport.perlagloria.model.Team;
 import com.sport.perlagloria.model.Tournament;
+import com.sport.perlagloria.util.SharedPreferenceKey;
 
 public class ChooseTeamActivity extends AppCompatActivity implements SelectChampionshipFragment.OnChampionshipPassListener, SelectTournamentFragment.OnTournamentPassListener,
         SelectDivisionFragment.OnDivisionPassListener, SelectTeamFragment.OnTeamPassListener {
@@ -147,6 +150,16 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
                 currentState++;
                 loadFragment();
                 triangleImageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_triangle));
+            } else if (currentState == SELECT_TEAM && checkSelection()) {    //move to the next activity
+                SharedPreferences sPref = getSharedPreferences("config", MODE_PRIVATE);     //save selected team
+                SharedPreferences.Editor ed = sPref.edit();
+                ed.putInt(SharedPreferenceKey.TEAM_ID, selectedTeam.getId());
+                ed.putString(SharedPreferenceKey.TEAM_NAME, selectedTeam.getName());
+                ed.commit();
+
+                Intent intent = new Intent(getApplicationContext(), TeamActivity.class);
+                startActivity(intent);
+                finish();
             }
         }
     }

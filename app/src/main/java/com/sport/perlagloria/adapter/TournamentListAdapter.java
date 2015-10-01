@@ -95,7 +95,7 @@ public class TournamentListAdapter extends RecyclerView.Adapter<TournamentListAd
             tournItemLayout = (RelativeLayout) itemView.findViewById(R.id.tournItemLayout);
             tournItemValue = (TextView) itemView.findViewById(R.id.tournItemValue);
             tournItemCheckBox = (CheckBox) itemView.findViewById(R.id.tournItemCheckBox);
-            dividerView = itemView.findViewById(R.id.dividerView);
+            dividerView = itemView.findViewById(R.id.horizDividerView);
         }
     }
 }

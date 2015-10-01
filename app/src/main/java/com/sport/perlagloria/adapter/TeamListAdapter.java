@@ -94,7 +94,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.MyView
             teamItemLayout = (RelativeLayout) itemView.findViewById(R.id.teamItemLayout);
             teamItemValue = (TextView) itemView.findViewById(R.id.teamItemValue);
             teamItemCheckBox = (CheckBox) itemView.findViewById(R.id.teamItemCheckBox);
-            dividerView = itemView.findViewById(R.id.dividerView);
+            dividerView = itemView.findViewById(R.id.horizDividerView);
         }
     }
 }
