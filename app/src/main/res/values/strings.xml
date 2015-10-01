@@ -21,6 +21,9 @@
     <!-- NO -->
     <string name="sure_exit_dialog_no">NO</string>
 
+    <!-- Loading data -->
+    <string name="loading_data_progress_dialog">Cargando datos</string>
+
     <!-- CHOOSE YOUR TEAM -->
     <string name="toolbar_choose_team_title">ELEGÍ TU EQUIPO</string>
 

@@ -1,5 +1,6 @@
 package com.sport.perlagloria.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -53,6 +54,8 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
     private TextView champValueTextView;
     private TextView tournValueTextView;
     private TextView divisValueTextView;
+
+    private ProgressDialog progressDialog;
 
     private OnTeamPassListener teamPassListener;  //pass selected team back to the activity
 
@@ -113,6 +116,11 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
         teamListRecView.setItemAnimator(null);
         teamListRecView.setLayoutManager(mLayoutManager);
 
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+
         loadTeamInfo();
 
         return rootView;
@@ -144,14 +152,29 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
         }
     }
 
+    private void showPDialog(String message) {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.setMessage(message);
+            progressDialog.show();
+        }
+    }
+
+    private void hidePDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     private void loadTeamInfo() {
         String loadTeamUrl = getString(R.string.server_host) + "/team/getteams?divisionId=" + divisionId;
+        showPDialog(getString(R.string.loading_data_progress_dialog));
 
         JsonArrayRequest teamsJsonRequest = new JsonArrayRequest(loadTeamUrl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         VolleyLog.d(LOADING_TEAMS_LIST_TAG, response.toString());
+                        hidePDialog();
 
                         if (!parseTeamsJson(response)) { //case of response parse error
                             showErrorAlertDialog();
@@ -164,6 +187,8 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         VolleyLog.d(LOADING_TEAMS_LIST_TAG, "Error: " + error.getMessage());
+                        hidePDialog();
+
                         showErrorAlertDialog();
                     }
                 }

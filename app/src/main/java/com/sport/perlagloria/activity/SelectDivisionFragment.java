@@ -1,5 +1,6 @@
 package com.sport.perlagloria.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -50,6 +51,8 @@ public class SelectDivisionFragment extends Fragment implements DivisionListAdap
     private TextView champValueTextView;
     private TextView tournValueTextView;
     private TextView divisValueTextView;
+
+    private ProgressDialog progressDialog;
 
     private OnDivisionPassListener divisionPassListener;  //pass selected division back to the activity
 
@@ -106,6 +109,11 @@ public class SelectDivisionFragment extends Fragment implements DivisionListAdap
         divisionListRecView.setItemAnimator(null);
         divisionListRecView.setLayoutManager(mLayoutManager);
 
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+
         loadDivisionInfo();
 
         return rootView;
@@ -139,14 +147,29 @@ public class SelectDivisionFragment extends Fragment implements DivisionListAdap
         }
     }
 
+    private void showPDialog(String message) {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.setMessage(message);
+            progressDialog.show();
+        }
+    }
+
+    private void hidePDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     private void loadDivisionInfo() {
         String loadDivisionUrl = getString(R.string.server_host) + "/division/getdivisions?tournamentId=" + tournamentId;
+        showPDialog(getString(R.string.loading_data_progress_dialog));
 
         JsonArrayRequest divisionsJsonRequest = new JsonArrayRequest(loadDivisionUrl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         VolleyLog.d(LOADING_DIVISIONS_LIST_TAG, response.toString());
+                        hidePDialog();
 
                         if (!parseDivisionsJson(response)) { //case of response parse error
                             showErrorAlertDialog();
@@ -159,6 +182,8 @@ public class SelectDivisionFragment extends Fragment implements DivisionListAdap
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         VolleyLog.d(LOADING_DIVISIONS_LIST_TAG, "Error: " + error.getMessage());
+                        hidePDialog();
+
                         showErrorAlertDialog();
                     }
                 }

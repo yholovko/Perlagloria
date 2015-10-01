@@ -1,5 +1,6 @@
 package com.sport.perlagloria.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -47,6 +48,8 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
 
     private TextView champValueTextView;
     private TextView tournValueTextView;
+
+    private ProgressDialog progressDialog;
 
     private OnTournamentPassListener tournamentPassListener;  //pass selected tournament back to the activity
 
@@ -98,6 +101,11 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
         tournamentListRecView.setItemAnimator(null);
         tournamentListRecView.setLayoutManager(mLayoutManager);
 
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+
         loadTournamentInfo();
 
         return rootView;
@@ -131,14 +139,29 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
         }
     }
 
+    private void showPDialog(String message) {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.setMessage(message);
+            progressDialog.show();
+        }
+    }
+
+    private void hidePDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     private void loadTournamentInfo() {
         String loadTournamentUrl = getString(R.string.server_host) + "/tournament/gettournaments?customerId=" + customerId;
+        showPDialog(getString(R.string.loading_data_progress_dialog));
 
         JsonArrayRequest tournamentsJsonRequest = new JsonArrayRequest(loadTournamentUrl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         VolleyLog.d(LOADING_TOURNAMENTS_LIST_TAG, response.toString());
+                        hidePDialog();
 
                         if (!parseTournamentsJson(response)) { //case of response parse error
                             showErrorAlertDialog();
@@ -151,6 +174,8 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         VolleyLog.d(LOADING_TOURNAMENTS_LIST_TAG, "Error: " + error.getMessage());
+                        hidePDialog();
+
                         showErrorAlertDialog();
                     }
                 }
