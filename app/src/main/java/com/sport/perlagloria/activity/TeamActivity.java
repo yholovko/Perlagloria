@@ -16,7 +16,6 @@ import com.sport.perlagloria.R;
 import com.sport.perlagloria.util.SharedPreferenceKey;
 
 public class TeamActivity extends AppCompatActivity {
-    //private TabLayout mainTabLayout;
     private TextView firstTab;
     private TextView secondTab;
 
@@ -43,6 +42,9 @@ public class TeamActivity extends AppCompatActivity {
                 if (isFirstTabSelected) return;
                 isFirstTabSelected = true;
 
+                secondTab.setBackgroundResource(R.drawable.custom_tab_back_unselected);
+                firstTab.setBackgroundResource(R.drawable.custom_tab_back_selected);
+
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 MyTeamFragment targetFragment = new MyTeamFragment();
 
@@ -59,6 +61,9 @@ public class TeamActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!isFirstTabSelected) return;
                 isFirstTabSelected = false;
+
+                firstTab.setBackgroundResource(R.drawable.custom_tab_back_unselected);
+                secondTab.setBackgroundResource(R.drawable.custom_tab_back_selected);
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 StatisticsFragment targetFragment = new StatisticsFragment();
