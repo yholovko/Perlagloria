@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -45,6 +46,9 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
     private ImageView triangleImageView;
     private RelativeLayout bottomLayout; //layout with "next" triangle button
     private boolean isCheckingProcess;
+    private TextView toolbarTitle;
+    private Toolbar mainToolbar;
+
 
     private Customer selectedChampionship;
     private Tournament selectedTournament;
@@ -56,8 +60,11 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_team);
 
-        Toolbar mainToolbar = (Toolbar) findViewById(R.id.mainToolbar);
+        mainToolbar = (Toolbar) findViewById(R.id.mainToolbar);
+        toolbarTitle = (TextView) mainToolbar.findViewById(R.id.toolbar_title);
         setSupportActionBar(mainToolbar);
+
+        getSupportActionBar().setTitle("");
 
         bottomLayout = (RelativeLayout) findViewById(R.id.bottomLayout);
         bottomLayout.setOnClickListener(new NextClickListener());
@@ -68,6 +75,10 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
         //checkInfo
 
         loadFragment();
+    }
+
+    public void setToolbarTitle(String text) {
+        toolbarTitle.setText(text);
     }
 
     private void loadFragment() {

@@ -20,13 +20,19 @@ public class TeamActivity extends AppCompatActivity {
     private TextView firstTab;
     private TextView secondTab;
 
+    private TextView toolbarTitle;
+    private Toolbar mainToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
-        setSupportActionBar(toolbar);
+        mainToolbar = (Toolbar) findViewById(R.id.mainToolbar);
+        toolbarTitle = (TextView) mainToolbar.findViewById(R.id.toolbar_title);
+        setSupportActionBar(mainToolbar);
+
+        getSupportActionBar().setTitle("");
 
         firstTab = (TextView) findViewById(R.id.firstTab);
         firstTab.setOnClickListener(new View.OnClickListener() {
@@ -45,10 +51,14 @@ public class TeamActivity extends AppCompatActivity {
         //mainTabLayout = (TabLayout) findViewById(R.id.main_tab_Layout);
 
         SharedPreferences sPref = getSharedPreferences("config", Context.MODE_PRIVATE);
-        getSupportActionBar().setTitle(sPref.getString(SharedPreferenceKey.TEAM_NAME, "Null"));
+        setToolbarTitle(sPref.getString(SharedPreferenceKey.TEAM_NAME, "Null"));
 
 
         //pagerAdapter.
+    }
+
+    public void setToolbarTitle(String text) {
+        toolbarTitle.setText(text);
     }
 
     @Override

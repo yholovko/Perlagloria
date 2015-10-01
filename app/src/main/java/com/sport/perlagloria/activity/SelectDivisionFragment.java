@@ -99,7 +99,7 @@ public class SelectDivisionFragment extends Fragment implements DivisionListAdap
         tournValueTextView.setText(tournamentName);
         divisValueTextView = (TextView) rootView.findViewById(R.id.divisValueTextView);
 
-        ((ChooseTeamActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.toolbar_choose_team_title));
+        ((ChooseTeamActivity) getActivity()).setToolbarTitle(getString(R.string.toolbar_choose_team_title));
 
         divisionArrayList = new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getActivity());
