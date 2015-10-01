@@ -1,5 +1,6 @@
 package com.sport.perlagloria.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -38,6 +39,8 @@ public class SelectChampionshipFragment extends Fragment implements Championship
 
     private TextView champValueTextView;
 
+    private ProgressDialog progressDialog;
+
     private OnChampionshipPassListener championshipPassListener;  //pass selected championship back to the activity
 
     public SelectChampionshipFragment() {
@@ -64,6 +67,11 @@ public class SelectChampionshipFragment extends Fragment implements Championship
         championshipListRecView.setAdapter(championshipListAdapter);
         championshipListRecView.setItemAnimator(null);
         championshipListRecView.setLayoutManager(mLayoutManager);
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
 
         loadChampionshipInfo();
 
@@ -99,14 +107,29 @@ public class SelectChampionshipFragment extends Fragment implements Championship
         }
     }
 
+    private void showPDialog(String message) {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.setMessage(message);
+            progressDialog.show();
+        }
+    }
+
+    private void hidePDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     private void loadChampionshipInfo() {
         String loadCustomersUrl = getString(R.string.server_host) + "/customer/getcustomers";
+        showPDialog(getString(R.string.loading_data_progress_dialog));
 
         JsonArrayRequest customersJsonRequest = new JsonArrayRequest(loadCustomersUrl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         VolleyLog.d(LOADING_CUSTOMERS_LIST_TAG, response.toString());
+                        hidePDialog();
 
                         if (!parseCustomersJson(response)) { //case of response parse error
                             showErrorAlertDialog();
@@ -119,6 +142,8 @@ public class SelectChampionshipFragment extends Fragment implements Championship
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         VolleyLog.d(LOADING_CUSTOMERS_LIST_TAG, "Error: " + error.getMessage());
+                        hidePDialog();
+
                         showErrorAlertDialog();
                     }
                 }

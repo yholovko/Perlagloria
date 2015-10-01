@@ -1,6 +1,7 @@
 package com.sport.perlagloria.activity;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -49,6 +50,8 @@ public class FixtureMatchInfoFragment extends Fragment {
     private TextView homeGoalsTV;
     private TextView awayGoalsTV;
 
+    private ProgressDialog progressDialog;
+
     private FixtureMatchInfo fixtureMatchInfo;
 
     public FixtureMatchInfoFragment() {
@@ -72,19 +75,39 @@ public class FixtureMatchInfoFragment extends Fragment {
         SharedPreferences sPref = getActivity().getSharedPreferences("config", Context.MODE_PRIVATE);
         teamId = sPref.getInt(SharedPreferenceKey.TEAM_ID, -1);
 
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+
         loadFixtureMatchInfo();
 
         return rootView;
     }
 
+    private void showPDialog(String message) {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.setMessage(message);
+            progressDialog.show();
+        }
+    }
+
+    private void hidePDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     private void loadFixtureMatchInfo() {
         String loadFixtureMatchInfoUrl = getString(R.string.server_host) + "/fixturematch/getnextfixturematch?teamId=" + teamId;
+        showPDialog(getString(R.string.loading_data_progress_dialog));
 
         JsonObjectRequest fixtureMatchInfoJsonRequest = new JsonObjectRequest(loadFixtureMatchInfoUrl,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         VolleyLog.d(LOADING_FIXTURE_MATCH_TAG, response.toString());
+                        hidePDialog();
 
                         if (!parseFixtudeMatchInfoJson(response)) { //case of response parse error
                             showErrorAlertDialog();
@@ -101,6 +124,8 @@ public class FixtureMatchInfoFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         VolleyLog.d(LOADING_FIXTURE_MATCH_TAG, "Error: " + error.getMessage());
+                        hidePDialog();
+
                         showErrorAlertDialog();
                     }
                 }
