@@ -23,7 +23,6 @@ public class MyTeamFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_team, container, false);
@@ -31,8 +30,9 @@ public class MyTeamFragment extends Fragment {
         tabLayout = (TabLayout) rootView.findViewById(R.id.tabLayout);
         viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 
-        myFragmentAdapter = new MyFragmentAdapter(getActivity().getSupportFragmentManager());
+        myFragmentAdapter = new MyFragmentAdapter(getChildFragmentManager());
         viewPager.setAdapter(myFragmentAdapter);
+
         tabLayout.setTabsFromPagerAdapter(myFragmentAdapter);
         tabLayout.setTabTextColors(getResources().getColor(R.color.tabNormal), getResources().getColor(R.color.tabSelected));
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.tabSelected));
@@ -79,6 +79,4 @@ public class MyTeamFragment extends Fragment {
             }
         }
     }
-
-
 }

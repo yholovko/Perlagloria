@@ -65,9 +65,10 @@
         android:layout_below="@+id/team1LogoImgView"
         android:layout_marginTop="20dp"
         android:layout_toLeftOf="@+id/versusTV"
+        android:layout_toStartOf="@+id/versusTV"
         android:gravity="center"
         android:singleLine="true"
-        android:text="asdgggggad"
+        android:text=""
         android:textColor="@android:color/black"
         android:textSize="17sp" />
 
@@ -81,6 +82,7 @@
         android:layout_alignStart="@+id/team2LogoImgView"
         android:layout_below="@+id/team2LogoImgView"
         android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/versusTV"
         android:layout_toRightOf="@+id/versusTV"
         android:gravity="center"
         android:singleLine="true"
