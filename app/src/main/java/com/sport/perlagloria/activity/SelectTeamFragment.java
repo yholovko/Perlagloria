@@ -221,6 +221,7 @@ public class SelectTeamFragment extends Fragment implements TeamListAdapter.OnCh
                 System.exit(0);
             }
         });
+        builder.setCancelable(false);
         builder.show();
     }
 

@@ -12,6 +12,15 @@
     <!-- CLOSE -->
     <string name="check_connection_dialog_close">CERCA</string>
 
+    <!-- Are you sure you want to exit? -->
+    <string name="sure_exit_dialog">¿Seguro que quieres salir?</string>
+
+    <!-- YES -->
+    <string name="sure_exit_dialog_yes">SÍ</string>
+
+    <!-- NO -->
+    <string name="sure_exit_dialog_no">NO</string>
+
     <!-- CHOOSE YOUR TEAM -->
     <string name="toolbar_choose_team_title">ELEGÍ TU EQUIPO</string>
 
