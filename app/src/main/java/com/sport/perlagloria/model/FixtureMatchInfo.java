@@ -8,11 +8,11 @@ public class FixtureMatchInfo {
     private String lastUpdateDate;
     private String fieldNumber;
     private String hour;
-    private int homeGoals;
-    private int awayGoals;
+    private String homeGoals;
+    private String awayGoals;
 
     public FixtureMatchInfo(int id, FixtureDate fixtureDate, Team homeTeam, Team awayTeam, String lastUpdateDate,
-                            String fieldNumber, String hour, int homeGoals, int awayGoals) {
+                            String fieldNumber, String hour, String homeGoals, String awayGoals) {
         this.id = id;
         this.fixtureDate = fixtureDate;
         this.homeTeam = homeTeam;
@@ -87,20 +87,20 @@ public class FixtureMatchInfo {
         return this;
     }
 
-    public int getHomeGoals() {
+    public String getHomeGoals() {
         return homeGoals;
     }
 
-    public FixtureMatchInfo setHomeGoals(int homeGoals) {
+    public FixtureMatchInfo setHomeGoals(String homeGoals) {
         this.homeGoals = homeGoals;
         return this;
     }
 
-    public int getAwayGoals() {
+    public String getAwayGoals() {
         return awayGoals;
     }
 
-    public FixtureMatchInfo setAwayGoals(int awayGoals) {
+    public FixtureMatchInfo setAwayGoals(String awayGoals) {
         this.awayGoals = awayGoals;
         return this;
     }

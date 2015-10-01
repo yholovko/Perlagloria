@@ -181,8 +181,8 @@ public class FixtureMatchInfoFragment extends Fragment {
                     awayTeamTactic,
                     false);
 
-            int homeGoals = (response.getString("homeGoals").equals("null")) ? 0 : response.getInt("homeGoals");
-            int awayGoals = (response.getString("awayGoals").equals("null")) ? 0 : response.getInt("awayGoals");
+            String homeGoals = (response.getString("homeGoals").equals("null")) ? "-" : response.getString("homeGoals");
+            String awayGoals = (response.getString("awayGoals").equals("null")) ? "-" : response.getString("awayGoals");
 
             fixtureMatchInfo = new FixtureMatchInfo(response.getInt("id"),
                     fixtureDate,
