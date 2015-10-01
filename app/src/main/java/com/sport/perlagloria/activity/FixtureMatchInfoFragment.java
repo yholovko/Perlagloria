@@ -233,6 +233,7 @@ public class FixtureMatchInfoFragment extends Fragment {
                 System.exit(0);
             }
         });
+        builder.setCancelable(false);
         builder.show();
     }
 

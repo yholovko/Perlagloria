@@ -198,6 +198,7 @@ public class SelectDivisionFragment extends Fragment implements DivisionListAdap
                 System.exit(0);
             }
         });
+        builder.setCancelable(false);
         builder.show();
     }
 

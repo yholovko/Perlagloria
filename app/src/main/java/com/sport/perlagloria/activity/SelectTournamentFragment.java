@@ -190,6 +190,7 @@ public class SelectTournamentFragment extends Fragment implements TournamentList
                 System.exit(0);
             }
         });
+        builder.setCancelable(false);
         builder.show();
     }
 

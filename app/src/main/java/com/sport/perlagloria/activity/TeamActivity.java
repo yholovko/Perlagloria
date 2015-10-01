@@ -1,10 +1,12 @@
 package com.sport.perlagloria.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -47,6 +49,27 @@ public class TeamActivity extends AppCompatActivity {
 
 
         //pagerAdapter.
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        showExitAlertDialog();
+    }
+
+    private void showExitAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        builder.setMessage(getString(R.string.sure_exit_dialog));
+        builder.setNegativeButton(getString(R.string.sure_exit_dialog_no), null);
+        builder.setPositiveButton(getString(R.string.sure_exit_dialog_yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                System.exit(0);
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
     }
 
 }

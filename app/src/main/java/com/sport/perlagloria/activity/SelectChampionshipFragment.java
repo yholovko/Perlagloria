@@ -158,6 +158,7 @@ public class SelectChampionshipFragment extends Fragment implements Championship
                 System.exit(0);
             }
         });
+        builder.setCancelable(false);
         builder.show();
     }
 
