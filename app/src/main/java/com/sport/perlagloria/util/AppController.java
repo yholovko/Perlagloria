@@ -12,20 +12,18 @@ import com.android.volley.toolbox.Volley;
 public class AppController extends Application {
 
     public static final String TAG = AppController.class.getSimpleName();
-
+    private static AppController mInstance;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
-    private static AppController mInstance;
+    public static synchronized AppController getInstance() {
+        return mInstance;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-    }
-
-    public static synchronized AppController getInstance() {
-        return mInstance;
     }
 
     public RequestQueue getRequestQueue() {
@@ -48,10 +46,9 @@ public class AppController extends Application {
         // set the default tag if tag is empty
         req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
 
-
         //Set a retry policy in case of SocketTimeout & ConnectionTimeout Exceptions.
         //Volley does retry for you if you have specified the policy.
-        req.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 2, 2));
+        req.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)); //1 try for 10 sec.
         getRequestQueue().add(req);
     }
 
@@ -60,7 +57,7 @@ public class AppController extends Application {
 
         //Set a retry policy in case of SocketTimeout & ConnectionTimeout Exceptions.
         //Volley does retry for you if you have specified the policy.
-        req.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 2, 2));
+        req.setRetryPolicy(new DefaultRetryPolicy(10000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)); //1 try for 10 sec.
         getRequestQueue().add(req);
     }
 
