@@ -54,4 +54,10 @@
     <!-- Statistics -->
     <string name="statistics">ESTADÍSTICAS</string>
 
+    <!-- POSITIONS -->
+    <string name="positions">POSICIONES</string>
+
+    <!-- TEAM -->
+    <string name="team">EQUIPO</string>
+
 </resources>
