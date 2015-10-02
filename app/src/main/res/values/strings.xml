@@ -60,4 +60,12 @@
     <!-- TEAM -->
     <string name="team">EQUIPO</string>
 
+    <!-- table columns name -->
+    <string name="points">Pts</string>
+    <string name="wins">PG</string>
+    <string name="ties">PE</string>
+    <string name="losses">PP</string>
+    <string name="goalsFor">GF</string>
+    <string name="goalsAgainst">GC</string>
+
 </resources>

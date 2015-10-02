@@ -14,9 +14,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sport.perlagloria.R;
+import com.sport.perlagloria.util.DpiUtils;
 import com.sport.perlagloria.util.SharedPreferenceKey;
 
 public class TeamActivity extends AppCompatActivity {
@@ -28,6 +31,8 @@ public class TeamActivity extends AppCompatActivity {
     private TextView toolbarTitle;
     private Toolbar mainToolbar;
 
+    private FrameLayout tabFragmentContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,8 @@ public class TeamActivity extends AppCompatActivity {
         setSupportActionBar(mainToolbar);
 
         getSupportActionBar().setTitle("");
+
+        tabFragmentContainer = (FrameLayout) findViewById(R.id.tab_fragment_container);
 
         firstTab = (TextView) findViewById(R.id.firstTab);
         firstTab.setOnClickListener(new View.OnClickListener() {
@@ -52,8 +59,13 @@ public class TeamActivity extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 MyTeamFragment targetFragment = new MyTeamFragment();
 
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tabFragmentContainer.getLayoutParams();
+                params.setMargins(DpiUtils.convertDipToPixels(getApplicationContext(), 20), DpiUtils.convertDipToPixels(getApplicationContext(), 10),
+                        DpiUtils.convertDipToPixels(getApplicationContext(), 20), DpiUtils.convertDipToPixels(getApplicationContext(), 0));
+                tabFragmentContainer.setLayoutParams(params);
+
                 fragmentManager.beginTransaction()
-                        .replace(R.id.tab_fragment_container, targetFragment)
+                        .replace(tabFragmentContainer.getId(), targetFragment)
                         .setTransition(FragmentTransaction.TRANSIT_NONE)
                         .commit();
             }
@@ -72,8 +84,13 @@ public class TeamActivity extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 StatisticsFragment targetFragment = new StatisticsFragment();
 
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tabFragmentContainer.getLayoutParams();
+                params.setMargins(DpiUtils.convertDipToPixels(getApplicationContext(), 0), DpiUtils.convertDipToPixels(getApplicationContext(), 10),
+                        DpiUtils.convertDipToPixels(getApplicationContext(), 0), DpiUtils.convertDipToPixels(getApplicationContext(), 0));
+                tabFragmentContainer.setLayoutParams(params);
+
                 fragmentManager.beginTransaction()
-                        .replace(R.id.tab_fragment_container, targetFragment)
+                        .replace(tabFragmentContainer.getId(), targetFragment)
                         .setTransition(FragmentTransaction.TRANSIT_NONE)
                         .commit();
             }

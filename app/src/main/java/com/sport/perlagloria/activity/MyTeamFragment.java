@@ -36,7 +36,7 @@ public class MyTeamFragment extends Fragment {
         tabLayout.setTabsFromPagerAdapter(myFragmentAdapter);
         tabLayout.setTabTextColors(getResources().getColor(R.color.tabNormal), getResources().getColor(R.color.tabSelected));
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.tabSelected));
-        tabLayout.setSelectedTabIndicatorHeight(1);
+        tabLayout.setSelectedTabIndicatorHeight(3);
 
         tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -71,14 +71,16 @@ public class MyTeamFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getString(R.string.next_game);
-                case 1:
-                    return getString(R.string.tactic_map);
-                default:
-                    return null;
-            }
+//            switch (position) {
+//                case 0:
+//                    return getString(R.string.next_game);
+//                case 1:
+//                    return getString(R.string.tactic_map);
+//                default:
+//                    return null;
+//            }
+
+            return null;
         }
     }
 }
