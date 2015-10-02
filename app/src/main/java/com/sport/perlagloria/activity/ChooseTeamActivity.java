@@ -300,12 +300,10 @@ public class ChooseTeamActivity extends AppCompatActivity implements SelectChamp
 
             if (currentState < SELECT_TEAM && checkSelection() && !isCheckingProcess) { //check data for next fragment
                 if (currentState == SELECT_CHAMPIONSHIP)
-                    checkIsDataFromServerJArray(getString(R.string.server_host) + "/customer/getcustomers");
-                if (currentState == SELECT_TOURNAMENT)
                     checkIsDataFromServerJArray(getString(R.string.server_host) + "/tournament/gettournaments?customerId=" + selectedChampionship.getId());
-                if (currentState == SELECT_DIVISION)
+                if (currentState == SELECT_TOURNAMENT)
                     checkIsDataFromServerJArray(getString(R.string.server_host) + "/division/getdivisions?tournamentId=" + selectedTournament.getId());
-                if (currentState == SELECT_TEAM)
+                if (currentState == SELECT_DIVISION)
                     checkIsDataFromServerJArray(getString(R.string.server_host) + "/team/getteams?divisionId=" + selectedDivision.getId());
 
                 triangleImageView.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_triangle));
