@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Perlagloria</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <!-- Choose another team -->
+    <string name="action_choose_another_team">Elige un nuevo equipo</string>
 
     <string name="server_host">http://perlagloria.com</string>
 

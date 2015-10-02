@@ -2,6 +2,7 @@ package com.sport.perlagloria.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +10,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -78,7 +82,28 @@ public class TeamActivity extends AppCompatActivity {
         SharedPreferences sPref = getSharedPreferences("config", Context.MODE_PRIVATE);
         setToolbarTitle(sPref.getString(SharedPreferenceKey.TEAM_NAME, "Null"));
 
-        firstTab.performClick();
+        firstTab.performClick();    //select 1st tab
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_team_activity, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionChangeTeam:
+                Intent intent = new Intent(getApplicationContext(), ChooseTeamActivity.class);
+                startActivity(intent);
+                finish();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void setToolbarTitle(String text) {
@@ -105,5 +130,7 @@ public class TeamActivity extends AppCompatActivity {
         builder.setCancelable(false);
         builder.show();
     }
+
+
 
 }
