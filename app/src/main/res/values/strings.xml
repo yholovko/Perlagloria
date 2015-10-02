@@ -10,13 +10,13 @@
     <string name="check_connection_dialog">Comprueba tu conexión a Internet</string>
 
     <!-- CLOSE -->
-    <string name="check_connection_dialog_close">CERCA</string>
+    <string name="check_connection_dialog_close">CERRAR</string>
 
     <!-- Are you sure you want to exit? -->
     <string name="sure_exit_dialog">¿Seguro que quieres salir?</string>
 
     <!-- YES -->
-    <string name="sure_exit_dialog_yes">SÍ</string>
+    <string name="sure_exit_dialog_yes">SI</string>
 
     <!-- NO -->
     <string name="sure_exit_dialog_no">NO</string>
@@ -45,7 +45,7 @@
     <!-- Next game -->
     <string name="next_game">Próximo Partido</string>
 
-    <!-- Mapa del Predio -->
+    <!-- Map -->
     <string name="tactic_map">Mapa del Predio</string>
 
     <!-- My team -->
