@@ -1,11 +1,8 @@
-package com.sport.perlagloria.activity;
+package com.sport.perlagloria.activity.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,9 +16,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.sport.perlagloria.R;
+import com.sport.perlagloria.activity.ChooseTeamActivity;
 import com.sport.perlagloria.adapter.ChampionshipListAdapter;
 import com.sport.perlagloria.model.Customer;
 import com.sport.perlagloria.util.AppController;
+import com.sport.perlagloria.util.ServerApi;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +29,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class SelectChampionshipFragment extends Fragment implements ChampionshipListAdapter.OnCheckboxCheckedListener {
-
     private static final String LOADING_CUSTOMERS_LIST_TAG = "customers_list_loading";
 
     private LinearLayoutManager mLayoutManager;
@@ -39,8 +37,6 @@ public class SelectChampionshipFragment extends Fragment implements Championship
     private ArrayList<Customer> championshipArrayList;
 
     private TextView champValueTextView;
-
-    private ProgressDialog progressDialog;
 
     private OnChampionshipPassListener championshipPassListener;  //pass selected championship back to the activity
 
@@ -68,11 +64,6 @@ public class SelectChampionshipFragment extends Fragment implements Championship
         championshipListRecView.setAdapter(championshipListAdapter);
         championshipListRecView.setItemAnimator(null);
         championshipListRecView.setLayoutManager(mLayoutManager);
-
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
 
         loadChampionshipInfo();
 
@@ -108,29 +99,16 @@ public class SelectChampionshipFragment extends Fragment implements Championship
         }
     }
 
-    private void showPDialog(String message) {
-        if (progressDialog != null && !progressDialog.isShowing()) {
-            progressDialog.setMessage(message);
-            progressDialog.show();
-        }
-    }
-
-    private void hidePDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
-
     private void loadChampionshipInfo() {
-        String loadCustomersUrl = getString(R.string.server_host) + "/customer/getcustomers";
-        showPDialog(getString(R.string.loading_data_progress_dialog));
+        String loadCustomersUrl = ServerApi.loadCustomersUrl;
+        ((ChooseTeamActivity) getActivity()).showPDialog(getString(R.string.loading_data_progress_dialog));
 
         JsonArrayRequest customersJsonRequest = new JsonArrayRequest(loadCustomersUrl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         VolleyLog.d(LOADING_CUSTOMERS_LIST_TAG, response.toString());
-                        hidePDialog();
+                        ((ChooseTeamActivity) getActivity()).hidePDialog();
 
                         if (!parseCustomersJson(response)) {                                        //case of response parse error
                             Toast.makeText(getActivity(), R.string.no_info_from_server, Toast.LENGTH_LONG).show();
@@ -143,12 +121,12 @@ public class SelectChampionshipFragment extends Fragment implements Championship
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         VolleyLog.d(LOADING_CUSTOMERS_LIST_TAG, "Error: " + error.getMessage());
-                        hidePDialog();
+                        ((ChooseTeamActivity) getActivity()).hidePDialog();
 
                         if (error.getMessage() == null) {                                            //com.android.volley.TimeoutError
-                            showErrorAlertDialog();
+                            ((ChooseTeamActivity) getActivity()).showConnectionErrorAlertDialog();
                         } else if (error.getMessage().contains("java.net.UnknownHostException") && error.networkResponse == null) { //com.android.volley.NoConnectionError
-                            showErrorAlertDialog();
+                            ((ChooseTeamActivity) getActivity()).showConnectionErrorAlertDialog();
                         } else {                                                                     //response error, code = error.networkResponse.statusCode
                             Toast.makeText(getActivity(), R.string.server_response_error, Toast.LENGTH_LONG).show();
                         }
@@ -178,20 +156,6 @@ public class SelectChampionshipFragment extends Fragment implements Championship
         }
 
         return true;
-    }
-
-    private void showErrorAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
-        builder.setMessage(getString(R.string.check_connection_dialog));
-        builder.setNegativeButton(getString(R.string.check_connection_dialog_close), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getActivity().finish();
-                System.exit(0);
-            }
-        });
-        builder.setCancelable(false);
-        builder.show();
     }
 
     /**

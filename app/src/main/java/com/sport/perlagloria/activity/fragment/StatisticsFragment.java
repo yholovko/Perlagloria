@@ -1,15 +1,12 @@
-package com.sport.perlagloria.activity;
+package com.sport.perlagloria.activity.fragment;
 
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +21,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.sport.perlagloria.R;
+import com.sport.perlagloria.activity.TeamActivity;
 import com.sport.perlagloria.model.Tactic;
 import com.sport.perlagloria.model.Team;
 import com.sport.perlagloria.util.AppController;
+import com.sport.perlagloria.util.ServerApi;
 import com.sport.perlagloria.util.SharedPreferenceKey;
 
 import org.json.JSONArray;
@@ -39,6 +38,7 @@ public class StatisticsFragment extends Fragment {
     private static final String LOADING_STATISTICS_TAG = "statistics_loading";
 
     private TableLayout table;
+    private RelativeLayout tableWrapper;
     private TextView teamTVHeader;
     private TextView pointsTVHeader;
     private TextView winsTVHeader;
@@ -48,14 +48,11 @@ public class StatisticsFragment extends Fragment {
     private TextView goalsAgainstTVHeader;
 
     private int teamId;
-    private ProgressDialog progressDialog;
     private ArrayList<Team> statisticsArrayList;
-    private RelativeLayout tableWrapper;
 
     public StatisticsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,11 +72,6 @@ public class StatisticsFragment extends Fragment {
         SharedPreferences sPref = getActivity().getSharedPreferences("config", Context.MODE_PRIVATE);
         teamId = sPref.getInt(SharedPreferenceKey.TEAM_ID, -1);
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-
         statisticsArrayList = new ArrayList<>();
 
         loadStatisticsInfo();
@@ -87,29 +79,16 @@ public class StatisticsFragment extends Fragment {
         return rootView;
     }
 
-    private void showPDialog(String message) {
-        if (progressDialog != null && !progressDialog.isShowing()) {
-            progressDialog.setMessage(message);
-            progressDialog.show();
-        }
-    }
-
-    private void hidePDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
-
     private void loadStatisticsInfo() {
-        String loadStatisticsUrl = getString(R.string.server_host) + "/team/getpositionsteams?teamId=" + teamId;
-        showPDialog(getString(R.string.loading_data_progress_dialog));
+        String loadStatisticsUrl = ServerApi.loadStatisticsUrl + teamId;
+        ((TeamActivity) getActivity()).showPDialog(getString(R.string.loading_data_progress_dialog));
 
         JsonArrayRequest statisticsJsonRequest = new JsonArrayRequest(loadStatisticsUrl,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         VolleyLog.d(LOADING_STATISTICS_TAG, response.toString());
-                        hidePDialog();
+                        ((TeamActivity) getActivity()).hidePDialog();
 
                         if (!parseStatisticsJson(response)) {                                        //case of response parse error
                             Toast.makeText(getActivity(), R.string.no_info_from_server, Toast.LENGTH_LONG).show();
@@ -122,12 +101,12 @@ public class StatisticsFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         VolleyLog.d(LOADING_STATISTICS_TAG, "Error: " + error.getMessage());
-                        hidePDialog();
+                        ((TeamActivity) getActivity()).hidePDialog();
 
                         if (error.getMessage() == null) {                                            //com.android.volley.TimeoutError
-                            showErrorAlertDialog();
+                            ((TeamActivity) getActivity()).showConnectionErrorAlertDialog();
                         } else if (error.getMessage().contains("java.net.UnknownHostException") && error.networkResponse == null) { //com.android.volley.NoConnectionError
-                            showErrorAlertDialog();
+                            ((TeamActivity) getActivity()).showConnectionErrorAlertDialog();
                         } else {                                                                     //response error, code = error.networkResponse.statusCode
                             Toast.makeText(getActivity(), R.string.server_response_error, Toast.LENGTH_LONG).show();
                         }
@@ -216,20 +195,4 @@ public class StatisticsFragment extends Fragment {
 
         tableWrapper.addView(fakeHeaderView);
     }
-
-    private void showErrorAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
-        builder.setMessage(getString(R.string.check_connection_dialog));
-        builder.setNegativeButton(getString(R.string.check_connection_dialog_close), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getActivity().finish();
-                System.exit(0);
-            }
-        });
-        builder.setCancelable(false);
-        builder.show();
-    }
-
-
 }

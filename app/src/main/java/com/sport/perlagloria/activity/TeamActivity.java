@@ -1,5 +1,6 @@
 package com.sport.perlagloria.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,26 +20,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sport.perlagloria.R;
+import com.sport.perlagloria.activity.fragment.MyTeamFragment;
+import com.sport.perlagloria.activity.fragment.StatisticsFragment;
 import com.sport.perlagloria.util.DpiUtils;
 import com.sport.perlagloria.util.SharedPreferenceKey;
 
 public class TeamActivity extends AppCompatActivity {
     private TextView firstTab;
     private TextView secondTab;
+    private FrameLayout tabFragmentContainer;
+    private TextView toolbarTitle;
 
     private boolean isFirstTabSelected;
 
-    private TextView toolbarTitle;
-    private Toolbar mainToolbar;
-
-    private FrameLayout tabFragmentContainer;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_team);
 
-        mainToolbar = (Toolbar) findViewById(R.id.mainToolbar);
+        Toolbar mainToolbar = (Toolbar) findViewById(R.id.mainToolbar);
         toolbarTitle = (TextView) mainToolbar.findViewById(R.id.toolbar_title);
         setSupportActionBar(mainToolbar);
 
@@ -96,6 +98,11 @@ public class TeamActivity extends AppCompatActivity {
             }
         });
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+
         SharedPreferences sPref = getSharedPreferences("config", Context.MODE_PRIVATE);
         setToolbarTitle(sPref.getString(SharedPreferenceKey.TEAM_NAME, "Null"));
 
@@ -127,6 +134,33 @@ public class TeamActivity extends AppCompatActivity {
         toolbarTitle.setText(text);
     }
 
+    public void showConnectionErrorAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        builder.setMessage(getString(R.string.check_connection_dialog));
+        builder.setNegativeButton(getString(R.string.check_connection_dialog_close), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                System.exit(0);
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    public void showPDialog(String message) {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.setMessage(message);
+            progressDialog.show();
+        }
+    }
+
+    public void hidePDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
@@ -147,7 +181,4 @@ public class TeamActivity extends AppCompatActivity {
         builder.setCancelable(false);
         builder.show();
     }
-
-
-
 }

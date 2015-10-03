@@ -1,14 +1,11 @@
-package com.sport.perlagloria.activity;
+package com.sport.perlagloria.activity.fragment;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +18,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.sport.perlagloria.R;
+import com.sport.perlagloria.activity.TeamActivity;
 import com.sport.perlagloria.model.Division;
 import com.sport.perlagloria.model.FixtureDate;
 import com.sport.perlagloria.model.FixtureMatchInfo;
 import com.sport.perlagloria.model.Tactic;
 import com.sport.perlagloria.model.Team;
 import com.sport.perlagloria.util.AppController;
+import com.sport.perlagloria.util.ServerApi;
 import com.sport.perlagloria.util.SharedPreferenceKey;
 
 import org.json.JSONException;
@@ -51,8 +50,6 @@ public class FixtureMatchInfoFragment extends Fragment {
     private TextView homeGoalsTV;
     private TextView awayGoalsTV;
 
-    private ProgressDialog progressDialog;
-
     private FixtureMatchInfo fixtureMatchInfo;
 
     public FixtureMatchInfoFragment() {
@@ -76,41 +73,23 @@ public class FixtureMatchInfoFragment extends Fragment {
         SharedPreferences sPref = getActivity().getSharedPreferences("config", Context.MODE_PRIVATE);
         teamId = sPref.getInt(SharedPreferenceKey.TEAM_ID, -1);
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-
         loadFixtureMatchInfo();
 
         return rootView;
     }
 
-    private void showPDialog(String message) {
-        if (progressDialog != null && !progressDialog.isShowing()) {
-            progressDialog.setMessage(message);
-            progressDialog.show();
-        }
-    }
-
-    private void hidePDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
-
     private void loadFixtureMatchInfo() {
-        String loadFixtureMatchInfoUrl = getString(R.string.server_host) + "/fixturematch/getnextfixturematch?teamId=" + teamId;
-        showPDialog(getString(R.string.loading_data_progress_dialog));
+        String loadFixtureMatchInfoUrl = ServerApi.loadFixtureMatchInfoUrl + teamId;
+        ((TeamActivity) getActivity()).showPDialog(getString(R.string.loading_data_progress_dialog));
 
         JsonObjectRequest fixtureMatchInfoJsonRequest = new JsonObjectRequest(loadFixtureMatchInfoUrl,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         VolleyLog.d(LOADING_FIXTURE_MATCH_TAG, response.toString());
-                        hidePDialog();
+                        ((TeamActivity) getActivity()).hidePDialog();
 
-                        if (!parseFixtudeMatchInfoJson(response)) { //case of response parse error
+                        if (!parseFixtureMatchInfoJson(response)) { //case of response parse error
                             Toast.makeText(getActivity(), R.string.no_info_from_server, Toast.LENGTH_LONG).show();
                         } else {
                             try {
@@ -125,12 +104,12 @@ public class FixtureMatchInfoFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         VolleyLog.d(LOADING_FIXTURE_MATCH_TAG, "Error: " + error.getMessage());
-                        hidePDialog();
+                        ((TeamActivity) getActivity()).hidePDialog();
 
                         if (error.getMessage() == null) {                                            //com.android.volley.TimeoutError
-                            showErrorAlertDialog();
+                            ((TeamActivity) getActivity()).showConnectionErrorAlertDialog();
                         } else if (error.getMessage().contains("java.net.UnknownHostException") && error.networkResponse == null) { //com.android.volley.NoConnectionError
-                            showErrorAlertDialog();
+                            ((TeamActivity) getActivity()).showConnectionErrorAlertDialog();
                         } else {                                                                     //response error, code = error.networkResponse.statusCode
                             Toast.makeText(getActivity(), R.string.server_response_error, Toast.LENGTH_LONG).show();
                         }
@@ -141,9 +120,8 @@ public class FixtureMatchInfoFragment extends Fragment {
         AppController.getInstance().addToRequestQueue(fixtureMatchInfoJsonRequest, LOADING_FIXTURE_MATCH_TAG); // Adding request to request queue
     }
 
-    private boolean parseFixtudeMatchInfoJson(JSONObject response) {
+    private boolean parseFixtureMatchInfoJson(JSONObject response) {
         try {
-
             FixtureDate fixtureDate;
             Division fixtureDateDivision;
             Team homeTeam;
@@ -163,7 +141,6 @@ public class FixtureMatchInfoFragment extends Fragment {
                     fixtureDateDivision,
                     fixtureDateObj.getString("date"),
                     fixtureDateObj.getString("dateNumber"));
-
 
             JSONObject homeTeamObj = response.getJSONObject("homeTeam");
             JSONObject homeTeamTacticObj = homeTeamObj.getJSONObject("tactic");
@@ -254,19 +231,4 @@ public class FixtureMatchInfoFragment extends Fragment {
         homeGoalsTV.setText(String.valueOf(fixtureMatchInfo.getHomeGoals()));
         awayGoalsTV.setText(String.valueOf(fixtureMatchInfo.getAwayGoals()));
     }
-
-    private void showErrorAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
-        builder.setMessage(getString(R.string.check_connection_dialog));
-        builder.setNegativeButton(getString(R.string.check_connection_dialog_close), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                getActivity().finish();
-                System.exit(0);
-            }
-        });
-        builder.setCancelable(false);
-        builder.show();
-    }
-
 }
