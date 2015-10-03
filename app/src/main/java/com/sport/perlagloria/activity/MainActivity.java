@@ -16,6 +16,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.sport.perlagloria.R;
 import com.sport.perlagloria.util.AppController;
+import com.sport.perlagloria.util.ServerApi;
 import com.sport.perlagloria.util.SharedPreferenceKey;
 
 import org.json.JSONException;
@@ -32,22 +33,20 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sPref = getSharedPreferences("config", Context.MODE_PRIVATE);
         final int savedTeamid = sPref.getInt(SharedPreferenceKey.TEAM_ID, -1);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (savedTeamid == -1) {
+        if (savedTeamid == -1) {    //if team was never selected
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
                     Intent intent = new Intent(getApplicationContext(), ChooseTeamActivity.class);
                     startActivity(intent);
                     finish();
-                } else {    //check if team is still available on server
-                    checkIsDataFromServerJObject(getString(R.string.server_host) + "/fixturematch/getnextfixturematch?teamId=" + savedTeamid);
                 }
+            }, 1000);   //show splashscreen during 1 sec
 
-            }
-        }, 1000);   //show splashscreen during 1 sec
-
+        } else {    //check if team is still available on server
+            checkIsDataFromServerJObject(ServerApi.loadFixtureMatchInfoUrl + savedTeamid);
+        }
     }
-
 
     private void checkIsDataFromServerJObject(String url) {
         JsonObjectRequest testJsonRequest = new JsonObjectRequest(url,
@@ -62,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
                             Intent intent = new Intent(getApplicationContext(), TeamActivity.class);    //if team is available -> move to last screen
                             startActivity(intent);
                             finish();
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(getApplicationContext(), R.string.no_info_from_server, Toast.LENGTH_LONG).show();    //no information from the server

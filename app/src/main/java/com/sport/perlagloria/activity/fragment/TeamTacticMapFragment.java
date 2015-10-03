@@ -1,4 +1,4 @@
-package com.sport.perlagloria.activity;
+package com.sport.perlagloria.activity.fragment;
 
 
 import android.os.Bundle;
@@ -50,6 +50,4 @@ public class TeamTacticMapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_team_tactic_map, container, false);
     }
-
-
 }
