@@ -12,12 +12,20 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabLayout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="15dp"
-        android:background="@color/colorPrimary"
-        app:tabGravity="fill"
-        app:tabMode="fixed" />
+        android:layout_height="30dp"
+        android:background="@color/colorPrimary">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="100dp"
+            android:layout_height="@dimen/custom_toolbar_height"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            app:tabGravity="fill"
+            app:tabMode="fixed" />
+    </RelativeLayout>
+
 
 </LinearLayout>

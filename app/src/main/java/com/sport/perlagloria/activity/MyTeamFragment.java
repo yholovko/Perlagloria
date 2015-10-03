@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.sport.perlagloria.R;
 
@@ -36,12 +37,22 @@ public class MyTeamFragment extends Fragment {
         tabLayout.setTabsFromPagerAdapter(myFragmentAdapter);
         tabLayout.setTabTextColors(getResources().getColor(R.color.tabNormal), getResources().getColor(R.color.tabSelected));
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.tabSelected));
-        tabLayout.setSelectedTabIndicatorHeight(3);
+        tabLayout.setSelectedTabIndicatorHeight(0);
 
         tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        //viewPager.setCurrentItem(0);
+        TextView tab1 = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.custom_tab, null);
+        tab1.setText("");
+        tab1.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.tab_selector, 0, 0);
+        tab1.setSelected(true);
+
+        TextView tab2 = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.custom_tab, null);
+        tab2.setText("");
+        tab2.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.tab_selector, 0, 0);
+
+        tabLayout.getTabAt(0).setCustomView(tab1);
+        tabLayout.getTabAt(1).setCustomView(tab2);
 
         return rootView;
     }
